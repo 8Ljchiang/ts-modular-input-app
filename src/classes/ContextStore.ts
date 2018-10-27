@@ -1,13 +1,21 @@
 import { IContext } from "../interfaces/IContext";
 
 export default class ContextStore  {
-    public contexts: { [id: string]: IContext };
+    public contextCollection: any;
 
-    constructor (args: any) {
-        this.contexts = args.contexts;
+    constructor (args: { contextCollection?: { [id: string]: IContext }}) {
+        this.contextCollection = args.contextCollection;
     }
 
     getContext(id: string): IContext {
-        return this.contexts[id];
+        return this.contextCollection[id];
+    }
+
+    addContext(context: IContext): void {
+        this.contextCollection[context.id] = context;
+    }
+
+    removeContext(contextId: string): void {
+        delete this.contextCollection[contextId];
     }
 }

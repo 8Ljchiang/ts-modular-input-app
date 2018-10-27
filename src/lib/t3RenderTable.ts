@@ -1,5 +1,4 @@
 import {IView} from '../interfaces/IView';
-import {IMove} from '../interfaces/IMove';
 import {IBoard} from '../interfaces/IBoard';
 import {IModule} from '../interfaces/IModule';
 import {IRenderTable } from '../interfaces/IRenderTable';

@@ -6,4 +6,6 @@ export interface IModule {
     moduleRenderer: any;
     status: string;
     handleInput(args: {input: string, view: any}): void;
+    setStatus(status: string): void;
+    getStatus(): string;
 }

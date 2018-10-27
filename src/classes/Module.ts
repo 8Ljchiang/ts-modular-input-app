@@ -18,7 +18,19 @@ export default class Module implements IModule {
         this.status = args.status || STATUS_DEFAULT;
     }
 
-    handleInput(args: {input: string, view: any}) {
-        this.parserDelegator.delegate(args, this);
+    handleInput(args: {input: string, view: any, app: any}) {
+        const newArgs = {
+            ...args,
+            module: this,
+        }
+        this.parserDelegator.delegate(newArgs);
+    }
+
+    getStatus(): string {
+        return this.status;
+    }
+
+    setStatus(status: string): void {
+        this.status = status;
     }
 }

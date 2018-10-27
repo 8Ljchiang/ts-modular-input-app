@@ -1,21 +1,22 @@
 import { IModule } from "../interfaces/IModule";
+import { IModuleStore } from "../interfaces/IModuleStore";
 
-export default class ModuleStore {
-    public modules: { [id: string]: IModule };
+export default class ModuleStore implements IModuleStore {
+    public moduleCollection: { [id: string]: IModule };
 
-    constructor(args: any) {
-        this.modules = args.modules;
+    constructor(args: { moduleCollection?: any }) {
+        this.moduleCollection = args.moduleCollection;
     }
 
     getModule(id: string): IModule {
-        return this.modules[id];
+        return this.moduleCollection[id];
     }
 
     addModule(module: IModule): void {
-        this.modules[module.id] = module;
+        this.moduleCollection[module.id] = module;
     }
     
     removeModule(moduleId: string): void {
-        delete this.modules[moduleId];
+        delete this.moduleCollection[moduleId];
     }
 }
