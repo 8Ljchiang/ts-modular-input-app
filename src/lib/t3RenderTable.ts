@@ -16,14 +16,16 @@ export const t3RenderTable: IRenderTable = {
         return welcome;
     },
     [STATUS_START]: function(args: { module: IModule, view: IView }) {
+        const { players, activePlayerIndex } = args.module.moduleData;
+        const playerName = players[activePlayerIndex].name;
         const boardString = renderBoard(args.module.moduleData.board);
         const { started } = args.module.moduleData.messages;
-        return boardString + "\n" + started;
+        return "Tic Tac Toe\n\n" + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
     },
     [STATUS_END]: function(args: { module: IModule, view: IView }) {
         const boardString = renderBoard(args.module.moduleData.board);
         const { end } = args.module.moduleData.messages;
-        return boardString + "\n" + end;
+        return "Tic Tac Toe\n\n" + boardString + "\n" + end;
     }
 }
 
@@ -34,6 +36,7 @@ function renderBoard(board: IBoard): string {
 
     for (let i = 0; i < data.length; i++) {
         const position = _adjustIndexToPosition(i);
+        // console.log(board.getPosition(1));
         if ((position%board.width) === 0) {
             // let fillString = _makeSpaceBuffer(4) + board.getPosition(position) + _makeSpaceBuffer(4);
             let fillString = _makeSpaceBuffer(4) + data[i] + _makeSpaceBuffer(4);
@@ -41,7 +44,8 @@ function renderBoard(board: IBoard): string {
             preResultStorage.push(_createManyNonlineRows(board, 1) + lineStorage.join("|") + _createManyNonlineRows(board, 1));
             lineStorage = []
         } else {
-            let fillString = _makeSpaceBuffer(4) + board.getPosition(position) + _makeSpaceBuffer(4);
+            // let fillString = _makeSpaceBuffer(4) + board.getPosition(position) + _makeSpaceBuffer(4);
+            let fillString = _makeSpaceBuffer(4) + data[i] + _makeSpaceBuffer(4);
             lineStorage.push(fillString);
         }
     } 

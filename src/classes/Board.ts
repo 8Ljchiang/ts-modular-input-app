@@ -25,7 +25,7 @@ export default class Board implements IBoard {
     }
 
     getData() {
-        const data = new Array(this._boardMaxPosition());
+        const data = new Array(this._boardMaxPosition()).fill(OPEN_SPACE);
         for (let move of this.moves) {
             const index = parseInt(move.position) - 1;
             data[index] = move.mark;

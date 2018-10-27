@@ -13,18 +13,20 @@ export default class App {
     public currentContextReference: any;
     public previousContextReferences: any;
     
-    constructor(args: { inputHandler: any, moduleStore: IModuleStore, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string, view?: IView }) {
-        this.inputHandler = args.inputHandler;
+    constructor(args: { inputInterface: any, moduleStore: IModuleStore, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string, view?: IView }) {
+        this.inputHandler = args.inputInterface;
         this.contextStore = args.contextStore;
         this.moduleStore = args.moduleStore;
-        this.currentContextReference = args.currentContextRef || null;
+        this.currentContextReference = args.currentContextRef || 'c1';
+        // this.currentContextReference = 'c1';
         this.previousContextReferences = args.previousContextRef || [];
-        this.view = args.view || new View();
+        this.view = args.view || new View({ inputInterface: args.inputInterface });
         this.init();
     }
 
     init() {
         this.inputHandler.on('line', (line: any) => {
+            this.view.clear();
             const context: IContext = this.contextStore.getContext(this.currentContextReference);
             const mModule: IModule = this.moduleStore.getModule(context.moduleId);
             const args = {
@@ -34,6 +36,17 @@ export default class App {
             }
             mModule.handleInput(args);
         });
+    }
+
+    run() {
+        this.view.clear();
+        const context: IContext = this.contextStore.getContext(this.currentContextReference);
+        const mModule: IModule = this.moduleStore.getModule(context.moduleId);
+        const args = {
+            module: mModule,
+            view: this.view
+        }
+        mModule.moduleRenderer.render(args);
     }
 
     setCurrentContextReference(contextId: string): void {

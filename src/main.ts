@@ -13,6 +13,7 @@ import ModuleRenderer from './classes/ModuleRenderer';
 import { t3ParserDictionary } from './lib/t3ParserDictionary'
 import { t3NewParser, t3EndParser, t3StartParser } from './lib/t3Parsers';
 import { t3RenderTable } from './lib/t3RenderTable';
+import { t3Messages } from './lib/t3Messages';
 
 import ContextStore from './classes/ContextStore';
 import { t3ContextCollection } from './lib/t3ContextCollection';
@@ -37,10 +38,13 @@ const t3ModuleArgs = {
     status: "NEW",
     moduleRenderer,
     parserDelegator,
+    currentContextRef: "c1",
+    previousContextRef: [],
     moduleData: {
         players: [player1, player2],
         board: new Board({ height: 3, width: 3, moves: [] }),
         activePlayerIndex: 0,
+        messages: t3Messages
     },
 }
 const t3Module = new Module(t3ModuleArgs);
@@ -49,9 +53,10 @@ moduleStore.addModule(t3Module);
 
 const contextStore = new ContextStore({ contextCollection: t3ContextCollection });
 
-const inputHandler = readline.createInterface(process.stdin, process.stdout);
-const appArgs = { inputHandler, moduleStore, contextStore, currentContextReference: "c1",  };
+const inputInterface = readline.createInterface(process.stdin, process.stdout);
+const appArgs = { inputInterface, moduleStore, contextStore, currentContextReference: "c1",  };
 const appT3 = new App(appArgs);
+appT3.run();
 
 
 

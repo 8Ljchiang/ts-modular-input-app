@@ -1,5 +1,6 @@
 import { IModule } from "../interfaces/IModule";
 import { STATUS_DEFAULT } from '../lib/constants';
+import { IModuleRenderer } from "../interfaces/IModuleRenderer";
 
 export default class Module implements IModule {
     public id: string;
@@ -9,7 +10,7 @@ export default class Module implements IModule {
     public moduleRenderer: any;
     public status: string;
     
-    constructor(args: any) {
+    constructor(args: { id: string, name: string, parserDelegator: any, moduleRenderer: IModuleRenderer, moduleData?: {}, status?: string }) {
         this.id = args.id;
         this.name = args.name;
         this.parserDelegator = args.parserDelegator;
@@ -24,6 +25,7 @@ export default class Module implements IModule {
             module: this,
         }
         this.parserDelegator.delegate(newArgs);
+        this.moduleRenderer.render({ module: this, view: args.view });
     }
 
     getStatus(): string {

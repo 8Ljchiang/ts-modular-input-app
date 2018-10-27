@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "Jonathan C <jchiang@8thlight.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "ts-node ./src/main.ts"
+  },
   "devDependencies": {
     "@types/node": "^10.12.0",
     "ts-node": "^7.0.1",

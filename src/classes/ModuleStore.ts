@@ -5,7 +5,7 @@ export default class ModuleStore implements IModuleStore {
     public moduleCollection: { [id: string]: IModule };
 
     constructor(args: { moduleCollection?: any }) {
-        this.moduleCollection = args.moduleCollection;
+        this.moduleCollection = args.moduleCollection || {};
     }
 
     getModule(id: string): IModule {

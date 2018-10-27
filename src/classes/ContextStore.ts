@@ -4,7 +4,7 @@ export default class ContextStore  {
     public contextCollection: any;
 
     constructor (args: { contextCollection?: { [id: string]: IContext }}) {
-        this.contextCollection = args.contextCollection;
+        this.contextCollection = args.contextCollection || {};
     }
 
     getContext(id: string): IContext {
