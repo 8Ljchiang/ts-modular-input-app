@@ -1,0 +1,60 @@
+import { IContextStore } from "../interfaces/IContextStore";
+import { IModuleStore } from '../interfaces/IModuleStore';
+import { IContext } from "../interfaces/IContext";
+import { IModule } from "../interfaces/IModule";
+import { IView } from "../interfaces/IView";
+import View from "./View";
+
+export default class App {
+    public view: any;
+    public inputHandler: any;
+    public moduleStore: any;
+    public contextStore: any;
+    public currentContextReference: any;
+    public previousContextReferences: any;
+    
+    constructor(args: { inputInterface: any, moduleStore: IModuleStore, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string, view?: IView }) {
+        this.inputHandler = args.inputInterface;
+        this.contextStore = args.contextStore;
+        this.moduleStore = args.moduleStore;
+        this.currentContextReference = args.currentContextRef || 'c1';
+        // this.currentContextReference = 'c1';
+        this.previousContextReferences = args.previousContextRef || [];
+        this.view = args.view || new View({ inputInterface: args.inputInterface });
+        this.init();
+    }
+
+    init() {
+        this.inputHandler.on('line', (line: any) => {
+            this.view.clear();
+            const context: IContext = this.contextStore.getContext(this.currentContextReference);
+            const mModule: IModule = this.moduleStore.getModule(context.moduleId);
+            const args = {
+                input: line,
+                view: this.view,
+                app: this
+            }
+            mModule.handleInput(args);
+        });
+    }
+
+    run() {
+        this.view.clear();
+        const context: IContext = this.contextStore.getContext(this.currentContextReference);
+        const mModule: IModule = this.moduleStore.getModule(context.moduleId);
+        const args = {
+            module: mModule,
+            view: this.view
+        }
+        mModule.moduleRenderer.render(args);
+    }
+
+    setCurrentContextReference(contextId: string): void {
+        this.setPreviousContextReference(this.currentContextReference);
+        this.currentContextReference = contextId;
+    }
+
+    setPreviousContextReference(contextId: string): void {
+        this.previousContextReferences.push(contextId);
+    }
+}
