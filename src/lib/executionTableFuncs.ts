@@ -23,14 +23,14 @@ export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 
 			const t3GameCheckAction = t3GameCheck(action.refData.moduleId);
 			t3GameCheckAction.refData.moveSuccess = true;
-			dispatcher.execute(t3GameCheckAction);
+			dispatcher.queueAction(t3GameCheckAction);
 		} else {
 			const t3GameCheckAction = t3GameCheck(action.refData.moduleId);
 			t3GameCheckAction.refData.moveSuccess = false;
-			dispatcher.execute(t3GameCheckAction);
+			dispatcher.queueAction(t3GameCheckAction);
 
 			const openMovesAction = showT3OpenMoves(action.refData.moduleId);;
-			dispatcher.execute(openMovesAction);
+			dispatcher.queueAction(openMovesAction);
 		}
 	}
 }

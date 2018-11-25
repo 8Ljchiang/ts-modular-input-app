@@ -42,6 +42,7 @@ export default class App {
             // currModule.handleInput(args);
             const action = handleInput(line, context.moduleId);
             this.dispatcher.execute(action);
+            this.dispatcher.processQueue();
         });
     }
 

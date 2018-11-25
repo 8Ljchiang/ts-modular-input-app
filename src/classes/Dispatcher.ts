@@ -3,6 +3,7 @@ import { IView } from "../interfaces/IView";
 import { IAction } from "../interfaces/IAction";
 import { IModuleStore } from "../interfaces/IModuleStore";
 import { renderModule } from "../lib/ActionBuilders";
+import { T3_MOVE } from "../lib/actionTypes";
 
 export default class Dispatcher implements IDispatcher {
 	public view: IView;
@@ -11,6 +12,7 @@ export default class Dispatcher implements IDispatcher {
 	public postProcessing: Array<{ fn: Function; next: boolean }>;
 	public otherProcessing: { [key: string]: Array<any> };
 	public executionTable: { [key: string]: Function };
+	public actionQueue: Array<IAction>;
 
 	constructor(args: { view: IView, moduleStore: IModuleStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
 		this.view = args.view;
@@ -19,12 +21,52 @@ export default class Dispatcher implements IDispatcher {
 		this.postProcessing = args.post;
 		this.executionTable = args.executionTable;
 		this.otherProcessing = args.otherProcessing;
+		this.actionQueue = [];
+	}
+
+	public resetQueue(): void {
+		this.actionQueue = [];
+	}
+
+	public queueAction(action: IAction): void {
+		this.actionQueue.push(action);	
+	}
+
+	public queueActions(actions: Array<IAction>): void {
+		actions.forEach((action) => this.actionQueue.push(action));
+	}
+
+	public executeQueue() {
+		while (this.actionQueue.length > 0) {
+			const action = this.actionQueue.shift();
+			if (action) {
+				this.execute(action);
+			}
+		}
+		this.resetQueue();
+	}
+
+	public processQueue() {
+		let lastAction = this.actionQueue[this.actionQueue.length - 1];
+		this._preProcess(this.actionQueue[0]);
+
+		while (this.actionQueue.length > 0) {
+			const action = this.actionQueue.shift();
+			if (action) {
+				lastAction = this.execute(action);	
+			}
+		}
+
+		this._postProcess(lastAction);
+		// this._postProcess(this.actionQueue[this.actionQueue.length-1]);
+
+		this.resetQueue();
 	}
 
 	public process(action: IAction): void {
 		this._preProcess(action);
-		this.execute(action);
-		this._postProcess(action);
+		const postAction = this.execute(action);
+		this._postProcess(postAction);
 	}
 
 	public addPreProcess(process: any): void {
@@ -43,6 +85,20 @@ export default class Dispatcher implements IDispatcher {
 			this.otherProcessing[actionType] = [{ fn, next: true }];
 		}
 	}
+
+	private _preAction(action: IAction): IAction {
+		const { refData } = action;
+		
+		const module = this.moduleStore.getModule(refData.moduleId);
+		action.refData.module = module;
+
+		return action;
+	}
+
+	private _postAction(action: IAction): IAction {
+		return action;
+	}
+
 	
 	private _preProcess(action: IAction): void {
 		
@@ -80,17 +136,19 @@ export default class Dispatcher implements IDispatcher {
 		// }
 	}
 
-	public execute(action: IAction): void {
-		const { type, payload, refData } = action;
+	public execute(action: IAction) {
 		
-		const module = this.moduleStore.getModule(refData.moduleId);
-		action.refData.module = module;
+		const updatedAction = this._preAction(action);
+		
+		const { type, payload, refData } = updatedAction;
 		if (type && payload && refData.moduleId && this._containsExecutionType(type)) {
 			const fn = this.executionTable[type];
 			fn(action, this);
 		} else {
 			this.view.show("Unknown action has been called.");
 		}
+
+		return this._postAction(updatedAction);
 	}
 
 	private _containsExecutionType(type: string) {
