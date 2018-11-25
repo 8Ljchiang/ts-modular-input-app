@@ -1,6 +1,7 @@
 import { IModule } from "../interfaces/IModule";
 import { STATUS_DEFAULT } from '../lib/constants';
 import { IModuleRenderer } from "../interfaces/IModuleRenderer";
+import { IParseArgs } from "../interfaces/Args";
 
 export default class Module implements IModule {
     public id: string;
@@ -19,13 +20,13 @@ export default class Module implements IModule {
         this.status = args.status || STATUS_DEFAULT;
     }
 
-    handleInput(args: {input: string, view: any, app: any}) {
+    handleInput(args: IParseArgs) {
         const newArgs = {
             ...args,
             module: this,
         }
         this.parserDelegator.delegate(newArgs);
-        this.moduleRenderer.render({ module: this, view: args.view });
+        // this.moduleRenderer.render({ module: this, view: args.view });
     }
 
     getStatus(): string {

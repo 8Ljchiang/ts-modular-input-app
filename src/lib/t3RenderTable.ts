@@ -1,28 +1,27 @@
-import {IView} from '../interfaces/IView';
 import {IBoard} from '../interfaces/IBoard';
-import {IModule} from '../interfaces/IModule';
 import {IRenderTable } from '../interfaces/IRenderTable';
 import {STATUS_DEFAULT, STATUS_END, STATUS_NEW, STATUS_START } from '../lib/constants';
+import { IRenderArgs } from '../interfaces/Args';
 
 const POSITION_OFFSET = 1;
 
 export const t3RenderTable: IRenderTable = {
-    [STATUS_DEFAULT]: function(args: { module: IModule, view: IView }) {
+    [STATUS_DEFAULT]: function(args: IRenderArgs) {
         const { welcome } = args.module.moduleData.messages;
         return welcome;
     },
-    [STATUS_NEW]: function(args: { module: IModule, view: IView }) {
+    [STATUS_NEW]: function(args: IRenderArgs) {
         const { welcome } = args.module.moduleData.messages;
         return welcome;
     },
-    [STATUS_START]: function(args: { module: IModule, view: IView }) {
+    [STATUS_START]: function(args: IRenderArgs) {
         const { players, activePlayerIndex } = args.module.moduleData;
         const playerName = players[activePlayerIndex].name;
         const boardString = renderBoard(args.module.moduleData.board);
         const { started } = args.module.moduleData.messages;
         return "Tic Tac Toe\n\n" + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
     },
-    [STATUS_END]: function(args: { module: IModule, view: IView }) {
+    [STATUS_END]: function(args: IRenderArgs) {
         const boardString = renderBoard(args.module.moduleData.board);
         const { end } = args.module.moduleData.messages;
         return "Tic Tac Toe\n\n" + boardString + "\n" + end;

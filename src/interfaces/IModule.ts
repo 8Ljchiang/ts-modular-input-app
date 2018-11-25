@@ -1,3 +1,5 @@
+import { IParseArgs } from './Args';
+
 export interface IModule {
     id: string;
     name: string;
@@ -5,7 +7,7 @@ export interface IModule {
     moduleData: any;
     moduleRenderer: any;
     status: string;
-    handleInput(args: {input: string, view: any}): void;
+    handleInput(args: IParseArgs): void;
     setStatus(status: string): void;
     getStatus(): string;
 }

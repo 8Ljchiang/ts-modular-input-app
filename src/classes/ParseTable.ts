@@ -1,16 +1,18 @@
 import { ITable } from "../interfaces/ITable";
 import { IParseTable } from "../interfaces/IParseTable";
 import { IModule } from "../interfaces/IModule";
-import { IView } from "../interfaces/IView";
+// import { IView } from "../interfaces/IView";
+import { IDispatcher } from "../interfaces/IDispatcher";
+import { IParseTableArgs } from "../interfaces/Args";
 
 export default class ParseTable implements IParseTable {
     public handlers: ITable; 
     
-    constructor (args: {handlers: ITable}) {
+    constructor (args: { handlers: ITable }) {
         this.handlers = args.handlers;
     }
 
-    handle(args: { input: string, view: IView, module: IModule }) {
+    handle(args: IParseTableArgs) {
         const { input } = args;
         if (this._isValidOption(args)) {
             if (this._containsHandler(input)) {
@@ -22,8 +24,8 @@ export default class ParseTable implements IParseTable {
             this.handleError(args);
         }
     }
-    handleError(args: { input: string, view: IView, module: IModule }) {
-        console.log("Warning: '" + args.input + "' has no path (OutOfBounds).");
+    handleError(args: IParseTableArgs) {
+        // console.log("Warning: '" + args.input + "' has no path (OutOfBounds).");
         if (this.handlers['error'] !== null) {
             this.handlers['error'](args);
         }

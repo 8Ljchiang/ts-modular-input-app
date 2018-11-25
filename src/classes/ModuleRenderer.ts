@@ -2,6 +2,7 @@ import { IView } from "../interfaces/IView";
 import { IModule } from "../interfaces/IModule";
 import { IRenderTable } from "../interfaces/IRenderTable";
 import { IModuleRenderer } from "../interfaces/IModuleRenderer";
+import { IRenderArgs } from "../interfaces/Args";
 
 export default class ModuleRenderer implements IModuleRenderer{
 
@@ -11,7 +12,7 @@ export default class ModuleRenderer implements IModuleRenderer{
         this.renderTable = args.renderTable;
     }
 
-    render(args: { module: IModule, view: IView }): void {
+    render(args: IRenderArgs): void {
         if (this.containsModuleStatus(args.module)) {
             // console.log("CLEAR");
             // args.view.clear();

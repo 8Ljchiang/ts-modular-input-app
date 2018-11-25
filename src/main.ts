@@ -3,6 +3,10 @@ import App from './classes/App';
 import Board from './classes/Board';
 import Player from './classes/Player';
 
+import View from "./classes/View";
+import Dispatcher from './classes/Dispatcher';
+import { executionTable } from './lib/executionTable';
+
 import ParserStore from './classes/ParserStore';
 import ParserDelegator from './classes/ParserDelegator';
 
@@ -32,6 +36,7 @@ const moduleRenderer = new ModuleRenderer(mRendArgs);
 
 const player1 = new Player({ id: "p1", name: "Sam", mark: "X" });
 const player2 = new Player({ id: "p2", name: "Dan", mark: "O" });
+
 const t3ModuleArgs = {
     id: "m-t3",
     name: "Tic Tac Toe",
@@ -47,15 +52,21 @@ const t3ModuleArgs = {
         messages: t3Messages
     },
 }
+
 const t3Module = new Module(t3ModuleArgs);
+
 const moduleStore = new ModuleStore({})
 moduleStore.addModule(t3Module);
 
 const contextStore = new ContextStore({ contextCollection: t3ContextCollection });
 
 const inputInterface = readline.createInterface(process.stdin, process.stdout);
-const appArgs = { inputInterface, moduleStore, contextStore, currentContextReference: "c1",  };
+const view = new View({ inputInterface, outputInterface: console });
+const dispatcher = new Dispatcher({ view, moduleStore, executionTable, pre: [], post: [], otherProcessing: {} });
+
+const appArgs = { dispatcher, moduleStore, contextStore, currentContextReference: "c1" };
 const appT3 = new App(appArgs);
+
 appT3.run();
 
 

@@ -1,6 +1,7 @@
-import { IModule } from "../interfaces/IModule";
 import { IParserStore } from "../interfaces/IParserStore";
 import { IParser } from "../interfaces/IParser";
+import { IParseTableArgs } from '../interfaces/Args';
+
 
 export default class ParserDelegator {
     public parsersDictionary: { [key: string]: string };
@@ -11,23 +12,14 @@ export default class ParserDelegator {
         this.parserStore = args.parserStore;
     }
 
-    delegate(args: { input: any, view: any, app?: any, module: IModule }) {
-        const trimmedInput = this.parse(args.input);
-        const newArgs = {
-            ...args,
-            input: trimmedInput
-        }
+    delegate(args: IParseTableArgs) {
         const key = args.module.status;
         const parserId = this.getParserId(key);
         const parser: IParser = this.parserStore.getParser(parserId);
-        parser.parseTable.handle(newArgs);
+        parser.parseTable.handle(args);
     }
 
     getParserId(key: string): string {
         return this.parsersDictionary[key];
-    }
-
-    parse(input: string) {
-        return input.trim();
     }
 }

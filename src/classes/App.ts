@@ -1,52 +1,65 @@
-import { IContextStore } from "../interfaces/IContextStore";
-import { IModuleStore } from '../interfaces/IModuleStore';
 import { IContext } from "../interfaces/IContext";
+import { IContextStore } from "../interfaces/IContextStore";
+import { IDispatcher } from "../interfaces/IDispatcher";
 import { IModule } from "../interfaces/IModule";
+import { IModuleStore } from '../interfaces/IModuleStore';
 import { IView } from "../interfaces/IView";
-import View from "./View";
+
+import { renderModule, handleInput } from "../lib/ActionBuilders";
 
 export default class App {
     public view: any;
+    public dispatcher: IDispatcher;
     public inputHandler: any;
     public moduleStore: any;
     public contextStore: any;
     public currentContextReference: any;
     public previousContextReferences: any;
     
-    constructor(args: { inputInterface: any, moduleStore: IModuleStore, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string, view?: IView }) {
-        this.inputHandler = args.inputInterface;
+    constructor(args: { dispatcher: IDispatcher, moduleStore: IModuleStore, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string, view?: IView }) {
+        this.dispatcher = args.dispatcher;
         this.contextStore = args.contextStore;
         this.moduleStore = args.moduleStore;
         this.currentContextReference = args.currentContextRef || 'c1';
-        // this.currentContextReference = 'c1';
         this.previousContextReferences = args.previousContextRef || [];
-        this.view = args.view || new View({ inputInterface: args.inputInterface });
         this.init();
     }
 
     init() {
-        this.inputHandler.on('line', (line: any) => {
-            this.view.clear();
+        const view = this.dispatcher.view;
+        view.inputInterface.on('line', (line: any) => {
             const context: IContext = this.contextStore.getContext(this.currentContextReference);
-            const mModule: IModule = this.moduleStore.getModule(context.moduleId);
+            const currModule: IModule = this.moduleStore.getModule(context.moduleId);
+            // const args = {
+            //     input: line,
+            //     view: this.view,
+            //     app: this
+            // }
+
             const args = {
                 input: line,
-                view: this.view,
-                app: this
+                dispatcher: this.dispatcher,
+                moduleId: context.moduleId
             }
-            mModule.handleInput(args);
+            currModule.handleInput(args);
+            // const action = handleInput(line, context.moduleId);
+            // this.dispatcher.execute(action);
         });
     }
 
     run() {
-        this.view.clear();
         const context: IContext = this.contextStore.getContext(this.currentContextReference);
-        const mModule: IModule = this.moduleStore.getModule(context.moduleId);
-        const args = {
-            module: mModule,
-            view: this.view
-        }
-        mModule.moduleRenderer.render(args);
+        const action = renderModule(context.moduleId);
+        this.dispatcher.execute(action);
+        
+        // this.view.clear();
+        // const context: IContext = this.contextStore.getContext(this.currentContextReference);
+        // const mModule: IModule = this.moduleStore.getModule(context.moduleId);
+        // const args = {
+        //     module: mModule,
+        //     view: this.dispatcher.view
+        // }
+        // mModule.moduleRenderer.render(args);
     }
 
     setCurrentContextReference(contextId: string): void {

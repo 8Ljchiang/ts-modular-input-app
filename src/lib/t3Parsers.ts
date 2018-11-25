@@ -1,6 +1,6 @@
 import ParseTable from '../classes/ParseTable';
 import { IParser } from "../interfaces/IParser";
-import { newGameHandlers, startedGameHandlers, endGameHandlers } from './t3ParseTables';
+import { newGameHandlers, startedGameHandlers, endGameHandlers } from './t3ParseTables2';
 
 const newParser = new ParseTable({ handlers: newGameHandlers });
 const startParser = new ParseTable({ handlers: startedGameHandlers });
