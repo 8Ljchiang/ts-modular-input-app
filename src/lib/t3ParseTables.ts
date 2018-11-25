@@ -21,13 +21,11 @@ export const newGameHandlers = {
 export const startedGameHandlers = {
     default: function(args: any) {
         
-        // console.log("Move:", position);
         const { players, activePlayerIndex, board } = args.module.moduleData;
         const currentPlayer = players[activePlayerIndex];
       
         const position = parseInt(args.input);
         if (board.isPositionEmpty(position)) {
-            // console.log(addMoveArgs);
             const addMoveArgs = {
                 playerId: currentPlayer.id,
                 position: args.input,

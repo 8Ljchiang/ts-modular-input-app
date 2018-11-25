@@ -3,7 +3,6 @@ import { IView } from "../interfaces/IView";
 import { IAction } from "../interfaces/IAction";
 import { IModuleStore } from "../interfaces/IModuleStore";
 import { renderModule } from "../lib/ActionBuilders";
-import { t3GameCheck } from '../lib/actionBuilders';
 
 export default class Dispatcher implements IDispatcher {
 	public view: IView;
@@ -48,7 +47,7 @@ export default class Dispatcher implements IDispatcher {
 	private _preProcess(action: IAction): void {
 		
 		this.view.clear();
-		// console.log("___PRE___")
+		// Future Dev:
 
 		// const processes = this.preProcessing;
 		// for (let i = 0; i < processes.length; i++) {
@@ -63,14 +62,12 @@ export default class Dispatcher implements IDispatcher {
 	}
 
 	private _postProcess(action: IAction): void {
-		// console.log("___POST___")
 		// This is kind of like middleware.
-		// const gameCheckAction = t3GameCheck(action.refData.moduleId);
-		// this.execute(gameCheckAction);
 
 		const renderAction = renderModule(action.refData.moduleId);
 		this.execute(renderAction);
 
+		// Future Dev:
 		// const processes = this.postProcessing;
 		// for (let i = 0; i < processes.length; i++) {
 			
@@ -84,7 +81,6 @@ export default class Dispatcher implements IDispatcher {
 	}
 
 	public execute(action: IAction): void {
-		// console.log("___EXEC___")
 		const { type, payload, refData } = action;
 		
 		const module = this.moduleStore.getModule(refData.moduleId);

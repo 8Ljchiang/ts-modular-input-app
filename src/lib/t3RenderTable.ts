@@ -35,15 +35,13 @@ function renderBoard(board: IBoard): string {
 
     for (let i = 0; i < data.length; i++) {
         const position = _adjustIndexToPosition(i);
-        // console.log(board.getPosition(1));
+
         if ((position%board.width) === 0) {
-            // let fillString = _makeSpaceBuffer(4) + board.getPosition(position) + _makeSpaceBuffer(4);
             let fillString = _makeSpaceBuffer(4) + data[i] + _makeSpaceBuffer(4);
             lineStorage.push(fillString + "\n");
             preResultStorage.push(_createManyNonlineRows(board, 1) + lineStorage.join("|") + _createManyNonlineRows(board, 1));
             lineStorage = []
         } else {
-            // let fillString = _makeSpaceBuffer(4) + board.getPosition(position) + _makeSpaceBuffer(4);
             let fillString = _makeSpaceBuffer(4) + data[i] + _makeSpaceBuffer(4);
             lineStorage.push(fillString);
         }
@@ -93,85 +91,3 @@ function _adjustIndexToPosition(index: number): number {
 function _adjustPositionToIndex(position: number): number {
     return position - POSITION_OFFSET;
 }
-
-// function renderBoard(module: IModule): string {
-//     const { boardWidth, boardHeight, moves } = module.moduleData;
-//     const preResultStorage = [];
-//     let lineStorage = [];
-
-//     for (let i = 0; i < (boardWidth * boardHeight); i++) {
-//         const position = this._adjustIndexToPosition(i);
-
-//         const markerValue = moves.filter((move) => {
-//             return move.position === position;
-//         });
-
-//         if ((position%boardWidth) === 0) {
-//             let fillString = this._makeSpaceBuffer(4) + board.getPosition(position) + this._makeSpaceBuffer(4);
-//             lineStorage.push(fillString + "\n");
-//             preResultStorage.push(this._createManyNonlineRows(board, 1) + lineStorage.join("|") + this._createManyNonlineRows(board, 1));
-//             lineStorage = []
-//         } else {
-//             let fillString = this._makeSpaceBuffer(4) + board.getPosition(position) + this._makeSpaceBuffer(4);
-//             lineStorage.push(fillString);
-//         }
-//     } 
-//     return preResultStorage.join(this._createLineRow(boardWidth));
-// }
-// function _makeSpaceBuffer(count: number): string {
-//     let buffer = "";
-//     for (let i = 0; i < count; i++) {
-//         buffer += " "
-//     }
-//     return buffer;
-// }
-// function _createNonlineRow(width: number): string {
-//     let rowLine = "";
-//     for (let i = 0; i < width; i++) {
-//         if (i < width - 1) {
-//             rowLine += this._makeSpaceBuffer(9) + "|"
-//         } else {
-//             rowLine += this._makeSpaceBuffer(9) + "\n"
-//         }
-//     }
-//     return rowLine;
-// }
-// function _createManyNonlineRows(width: number, count: number): string {
-//     let fill = "";
-//     for (let i = 0; i < count; i++) {
-//         fill += this._createNonlineRow(width);
-//     }
-//     return fill;
-// }
-// function _createLineRow(width: number): string {
-//     const rowLength = (width * 9) + width - 1
-//     let rowLine = "";
-//     for (let i = 0; i < rowLength; i++) {
-//         if (i < rowLength - 1) {
-//             rowLine += "-";
-//         } else {
-//             rowLine += "-\n";
-//         }
-//     }
-//     return rowLine;
-// }
-// function _adjustIndexToPosition(index: number): number {
-//     return index + POSITION_OFFSET;
-// }
-// function _adjustPositionToIndex(position: number): number {
-//     return position - POSITION_OFFSET;
-// }
-
-
-// switch(args.module.status) {
-//     // const { module, view } = args;
-//     case STATUS_DEFAULT:
-//     args.view.show(args.module.moduleData.messages.welcome);
-//     break;
-//     case STATUS_NEW:
-//     args.view.show(args.module.moduleData.messages.welcome);
-//     break;
-//     case STATUS_START:
-//     args.view.show(args.module.moduleData.messages.welcome);
-//     default:
-// }

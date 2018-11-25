@@ -2,7 +2,6 @@ import { IParserStore } from "../interfaces/IParserStore";
 import { IParser } from "../interfaces/IParser";
 import { IParseTableArgs } from '../interfaces/Args';
 
-
 export default class ParserDelegator {
     public parsersDictionary: { [key: string]: string };
     public parserStore: any;

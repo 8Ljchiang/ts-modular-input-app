@@ -1,8 +1,5 @@
 import { ITable } from "../interfaces/ITable";
 import { IParseTable } from "../interfaces/IParseTable";
-import { IModule } from "../interfaces/IModule";
-// import { IView } from "../interfaces/IView";
-import { IDispatcher } from "../interfaces/IDispatcher";
 import { IParseTableArgs } from "../interfaces/Args";
 
 export default class ParseTable implements IParseTable {
@@ -25,7 +22,6 @@ export default class ParseTable implements IParseTable {
         }
     }
     handleError(args: IParseTableArgs) {
-        // console.log("Warning: '" + args.input + "' has no path (OutOfBounds).");
         if (this.handlers['error'] !== null) {
             this.handlers['error'](args);
         }

@@ -26,7 +26,6 @@ export default class Module implements IModule {
             module: this,
         }
         this.parserDelegator.delegate(newArgs);
-        // this.moduleRenderer.render({ module: this, view: args.view });
     }
 
     getStatus(): string {

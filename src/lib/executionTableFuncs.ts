@@ -97,7 +97,7 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 	const module = action.refData.module;
 
 	if (module.status === STATUS_START) {
-		// Check if there is a winner.
+		// Note: Check if there is a winner.
 		// const patternChecker = {};
 		// const { players, activePlayerIndex, board } = module.moduleData;
 		// const currentPlayer = players[activePlayerIndex];
@@ -107,13 +107,13 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 		// 	module.setStatus("WINNER");
 		// }
 	
-		// Check if there the board is full.
+		// Note: Check if there the board is full.
 		if (module.moduleData.board.getEmptyPositions().length <= 0) {
 			module.setStatus(STATUS_END);
 			// module.setStatus("DRAW");
 		}
 	
-		// Otherwise cycle player.
+		// Note: Otherwise cycle player.
 		else {
 			if (action.refData.moveSuccess) {
 				cycleActivePlayer(module);
