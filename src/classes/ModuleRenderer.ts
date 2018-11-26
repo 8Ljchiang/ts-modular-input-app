@@ -17,7 +17,13 @@ export default class ModuleRenderer implements IModuleRenderer{
             args.view.show(renderString);
             
             const { players, activePlayerIndex } = args.module.moduleData;
-            args.view.setPrompt(players[activePlayerIndex].name + ": ");
+            const playerId = players[activePlayerIndex];
+            const player = args.playerStore.get(playerId);
+            let name = 'Unknown Name';
+            if (player) {
+                name = player.name;
+            }
+            args.view.setPrompt(`${name}: `);
         }
     }
 

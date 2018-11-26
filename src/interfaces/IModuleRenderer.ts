@@ -1,7 +1,7 @@
 import { IModule } from "./IModule";
-import { IView } from "./IView";
+import { IRenderArgs } from "./Args";
 
 export interface IModuleRenderer {
-    render(args: { module: IModule, view: IView }): void;
+    render(args: IRenderArgs): void;
     containsModuleStatus(module: IModule): void;
 }

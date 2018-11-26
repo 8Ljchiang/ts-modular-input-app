@@ -3,18 +3,23 @@ import { IView } from "../interfaces/IView";
 import { IAction } from "../interfaces/IAction";
 import { IModuleStore } from "../interfaces/IModuleStore";
 import { renderModule } from "../lib/ActionBuilders";
+import { IPlayerStore } from "../interfaces/IPlayerStore";
+import { IPlayer } from "../interfaces/IPlayer";
+import Module from '../classes/Module';
 
 export default class Dispatcher implements IDispatcher {
 	public view: IView;
 	public moduleStore: IModuleStore;
+	public playerStore: IPlayerStore;
 	public preProcessing: Array<{ fn: Function; next: boolean }>;
 	public postProcessing: Array<{ fn: Function; next: boolean }>;
 	public otherProcessing: { [key: string]: Array<any> };
 	public executionTable: { [key: string]: Function };
 
-	constructor(args: { view: IView, moduleStore: IModuleStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
+	constructor(args: { view: IView, moduleStore: IModuleStore, playerStore: IPlayerStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
 		this.view = args.view;
 		this.moduleStore = args.moduleStore;
+		this.playerStore = args.playerStore;
 		this.preProcessing = args.pre;
 		this.postProcessing = args.post;
 		this.executionTable = args.executionTable;
@@ -43,6 +48,28 @@ export default class Dispatcher implements IDispatcher {
 			this.otherProcessing[actionType] = [{ fn, next: true }];
 		}
 	}
+
+	// public updateModule(moduleId: string, updateObject: { [key: string]: any }): void {
+	// 	this.moduleStore.updateModule(moduleId, updateObject);
+	// }
+
+	// public updateModuleData(moduleId: string, updateDataObject: { [key: string]: any }): void {
+	// 	this.moduleStore.updateModuleData(moduleId, updateDataObject);
+	// }
+
+	// public updateModuleDataMove(moduleId: string, addMoveArgs: { [key: string]: any }): void {
+	// 	const module = this.moduleStore.getModule(moduleId);
+	// 	module.moduleData.board.addMove(addMoveArgs);
+	// }
+
+	// public resetModuleData(moduleId: string): void {
+	// 	const module = this.moduleStore.getModule(moduleId);
+	// 	module.moduleData.board.reset();
+	// }
+
+	// public getPlayer(playerId: string): IPlayer | null {
+	// 	return this.playerStore.get(playerId);
+	// }
 	
 	private _preProcess(action: IAction): void {
 		
@@ -84,7 +111,15 @@ export default class Dispatcher implements IDispatcher {
 		const { type, payload, refData } = action;
 		
 		const module = this.moduleStore.getModule(refData.moduleId);
+		
+		// console.log(module);
+
 		action.refData.module = module;
+
+		// const clone = Object.assign( {}, module );
+		// Object.setPrototypeOf( clone, Module.prototype );
+
+		action.refData.module = Object.assign( Object.create( Object.getPrototypeOf(module)), module)
 		if (type && payload && refData.moduleId && this._containsExecutionType(type)) {
 			const fn = this.executionTable[type];
 			fn(action, this);

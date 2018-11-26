@@ -40,6 +40,7 @@ export default class App {
             //     moduleId: context.moduleId
             // }
             // currModule.handleInput(args);
+            // console.log(context.moduleId);
             const action = handleInput(line, context.moduleId);
             this.dispatcher.execute(action);
         });

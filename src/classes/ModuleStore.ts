@@ -20,10 +20,26 @@ export default class ModuleStore implements IModuleStore {
     }
     updateModule(moduleId: string, updateObject: { [key: string]: any }): void {
         const currentModule = this.moduleCollection[moduleId];
-        this.moduleCollection[moduleId] = { ...currentModule, ...updateObject };
+        if (currentModule) {
+            this.moduleCollection[moduleId] = { ...currentModule, ...updateObject };
+        }
     }
     updateModuleData(moduleId: string, updateDataObject: { [key: string]: any }): void {
         const currentDataObject = this.moduleCollection[moduleId].moduleData;
-        this.moduleCollection[moduleId].moduleData = { ...currentDataObject, ...updateDataObject };
+        if (currentDataObject) {
+            this.moduleCollection[moduleId].moduleData = { ...currentDataObject, ...updateDataObject };
+        }
+    }
+    updateModuleDataMoves(moduleId: string, moveArgs: { [key: string]: any }): void {
+        const currentModule = this.moduleCollection[moduleId];
+        if (currentModule) {
+            this.moduleCollection[moduleId].moduleData.board.addMove(moveArgs);
+        }
+    }
+    resetModuleDataMoves(moduleId: string): void {
+        const currentModule = this.moduleCollection[moduleId];
+        if (currentModule) {
+            currentModule.moduleData.board.reset();
+        }
     }
 }
