@@ -1,9 +1,6 @@
 import { IContext } from "../interfaces/IContext";
 import { IContextStore } from "../interfaces/IContextStore";
 import { IDispatcher } from "../interfaces/IDispatcher";
-// import { IModule } from "../interfaces/IModule";
-import { IModuleStore } from '../interfaces/IModuleStore';
-import { IView } from "../interfaces/IView";
 
 import { renderModule, handleInput } from "../lib/ActionBuilders";
 
@@ -40,7 +37,7 @@ export default class App {
             //     moduleId: context.moduleId
             // }
             // currModule.handleInput(args);
-            // console.log(context.moduleId);
+
             const action = handleInput(line, context.moduleId);
             this.dispatcher.execute(action);
         });

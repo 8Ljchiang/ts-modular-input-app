@@ -85,13 +85,6 @@ const appArgs = {
     currentContextReference: "c1" 
 };
 
-// const m = moduleStore.getModule(t3Module.id);
-// m.handleInput({
-//     dispatcher,
-//     moduleId: t3Module.id,
-//     input: "ready",
-// });
-
 const appT3 = new App(appArgs);
 
 appT3.run();
