@@ -81,7 +81,6 @@ const dispatcher = new Dispatcher(dispatcherArgs);
 
 const appArgs = { 
     dispatcher, 
-    moduleStore, 
     contextStore, 
     currentContextReference: "c1" 
 };

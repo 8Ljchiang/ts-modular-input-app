@@ -30,7 +30,7 @@ export const startedGameHandlers = {
 		args.dispatcher.process(action);
     },
     options: function(args: any) { 
-        return [];
+        return args.dispatcher.moduleStore.getModule(args.moduleId).moduleData.board.getEmptyPositions().map((p: any) => p.toString());
     }
 }
 

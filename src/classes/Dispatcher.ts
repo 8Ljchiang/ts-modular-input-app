@@ -114,12 +114,14 @@ export default class Dispatcher implements IDispatcher {
 		
 		// console.log(module);
 
-		action.refData.module = module;
+		// action.refData.module = module;
+		// action.refData.module = Object.assign( Object.create( Object.getPrototypeOf(module)), module)
 
 		// const clone = Object.assign( {}, module );
 		// Object.setPrototypeOf( clone, Module.prototype );
 
 		action.refData.module = Object.assign( Object.create( Object.getPrototypeOf(module)), module)
+
 		if (type && payload && refData.moduleId && this._containsExecutionType(type)) {
 			const fn = this.executionTable[type];
 			fn(action, this);

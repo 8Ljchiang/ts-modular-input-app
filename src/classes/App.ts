@@ -14,7 +14,7 @@ export default class App {
     public currentContextReference: any;
     public previousContextReferences: any;
     
-    constructor(args: { dispatcher: IDispatcher, moduleStore: IModuleStore, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string, view?: IView }) {
+    constructor(args: { dispatcher: IDispatcher, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string }) {
         this.dispatcher = args.dispatcher;
         this.contextStore = args.contextStore;
         // this.moduleStore = args.moduleStore;

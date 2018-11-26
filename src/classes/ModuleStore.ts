@@ -19,9 +19,14 @@ export default class ModuleStore implements IModuleStore {
         delete this.moduleCollection[moduleId];
     }
     updateModule(moduleId: string, updateObject: { [key: string]: any }): void {
-        const currentModule = this.moduleCollection[moduleId];
-        if (currentModule) {
-            this.moduleCollection[moduleId] = { ...currentModule, ...updateObject };
+        // const currentModule = this.moduleCollection[moduleId];
+        // if (currentModule) {
+        //     this.moduleCollection[moduleId] = { ...currentModule, ...updateObject };
+        // }
+
+        // Hackey way of doing this. Maybe I should move module status to moduleData.
+        if (updateObject.status) {
+            this.moduleCollection[moduleId].status = updateObject.status;
         }
     }
     updateModuleData(moduleId: string, updateDataObject: { [key: string]: any }): void {

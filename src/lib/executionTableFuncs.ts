@@ -98,7 +98,6 @@ export function RENDER_MODULE_FN(action: IAction, dispatcher: IDispatcher): void
 export function HANDLE_INPUT_FN(action: IAction, dispatcher: IDispatcher): void {
 	const module = action.refData.module;
 	const trimmedInput = action.payload.input.trim();
-	// console.log(module);
 	if (module) {
 		module.handleInput({ input: trimmedInput, dispatcher, moduleId: action.refData.moduleId });
 	}
