@@ -21,6 +21,7 @@ import { t3Messages } from './lib/t3Messages';
 
 import ContextStore from './classes/ContextStore';
 import { t3ContextCollection } from './lib/t3ContextCollection';
+import PlayerStore from './classes/PlayerStore';
 // import { IMove } from './interfaces/IMove';
 
 const parserStore = new ParserStore({ parserCollection: {} });
@@ -34,8 +35,15 @@ const parserDelegator = new ParserDelegator(pDelArgs);
 const mRendArgs = { renderTable: t3RenderTable }
 const moduleRenderer = new ModuleRenderer(mRendArgs);
 
-const player1 = new Player({ id: "p1", name: "Sam", mark: "X" });
-const player2 = new Player({ id: "p2", name: "Dan", mark: "O" });
+const P1_id = 'p1';
+const P2_id = 'p2';
+
+const player1 = new Player({ id: P1_id, name: "Sam", mark: "X" });
+const player2 = new Player({ id: P2_id, name: "Dan", mark: "O" });
+
+const playerStore = new PlayerStore({});
+playerStore.add(player1);
+playerStore.add(player2);
 
 const t3ModuleArgs = {
     id: "m-t3",
@@ -43,10 +51,8 @@ const t3ModuleArgs = {
     status: "NEW",
     moduleRenderer,
     parserDelegator,
-    currentContextRef: "c1",
-    previousContextRef: [],
     moduleData: {
-        players: [player1, player2],
+        players: [P1_id, P2_id],
         board: new Board({ height: 3, width: 3, moves: [] }),
         activePlayerIndex: 0,
         messages: t3Messages

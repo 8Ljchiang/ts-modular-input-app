@@ -8,16 +8,22 @@ export default class ModuleStore implements IModuleStore {
     constructor(args: { moduleCollection?: any }) {
         this.moduleCollection = args.moduleCollection || {};
     }
-
+    
     getModule(id: string): IModule {
         return this.moduleCollection[id];
     }
-
     addModule(module: IModule): void {
         this.moduleCollection[module.id] = module;
     }
-    
     removeModule(moduleId: string): void {
         delete this.moduleCollection[moduleId];
+    }
+    updateModule(moduleId: string, updateObject: { [key: string]: any }): void {
+        const currentModule = this.moduleCollection[moduleId];
+        this.moduleCollection[moduleId] = { ...currentModule, ...updateObject };
+    }
+    updateModuleData(moduleId: string, updateDataObject: { [key: string]: any }): void {
+        const currentDataObject = this.moduleCollection[moduleId].moduleData;
+        this.moduleCollection[moduleId].moduleData = { ...currentDataObject, ...updateDataObject };
     }
 }
