@@ -1,8 +1,9 @@
 import { IModule } from "../interfaces/IModule";
 import { IModuleStore } from "../interfaces/IModuleStore";
+import { ICollection } from "../interfaces/ICollection";
 
 export default class ModuleStore implements IModuleStore {
-    public moduleCollection: { [id: string]: IModule };
+    public moduleCollection: ICollection<IModule>;
 
     constructor(args: { moduleCollection?: any }) {
         this.moduleCollection = args.moduleCollection || {};
