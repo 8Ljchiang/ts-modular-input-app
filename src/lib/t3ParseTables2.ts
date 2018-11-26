@@ -29,8 +29,8 @@ export const startedGameHandlers = {
 		const action = showT3OpenMoves(args.moduleId);
 		args.dispatcher.process(action);
     },
-    options: function(args: any) { 
-        return [];
+    options: function(args: IParseArgs) { 
+        return args.dispatcher.moduleStore.getModule(args.moduleId).moduleData.board.getEmptyPositions().map((p: any) => p.toString());
     }
 }
 
