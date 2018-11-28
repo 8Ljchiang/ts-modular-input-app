@@ -2,8 +2,10 @@ import {IBoard} from '../interfaces/IBoard';
 import {IRenderTable } from '../interfaces/IRenderTable';
 import {STATUS_DEFAULT, STATUS_END, STATUS_NEW, STATUS_START } from '../lib/constants';
 import { IRenderArgs } from '../interfaces/Args';
+import { listeners } from 'cluster';
 
 const POSITION_OFFSET = 1;
+const DEFAULT_CELL_WIDTH = 9;
 
 export const t3RenderTable: IRenderTable = {
     [STATUS_DEFAULT]: function(args: IRenderArgs) {
@@ -31,7 +33,7 @@ export const t3RenderTable: IRenderTable = {
 }
 
 function renderBoard(board: IBoard): string {
-    const preResultStorage = [];
+    const boardRowsStorage = [];
     let lineStorage = [];
     const data = board.getData();
 
@@ -39,17 +41,30 @@ function renderBoard(board: IBoard): string {
         const position = _adjustIndexToPosition(i);
 
         if ((position%board.width) === 0) {
-            let fillString = _makeSpaceBuffer(4) + data[i] + _makeSpaceBuffer(4);
-            lineStorage.push(fillString + "\n");
-            preResultStorage.push(_createManyNonlineRows(board, 1) + lineStorage.join("|") + _createManyNonlineRows(board, 1));
+            lineStorage.push(createBoardLine(data[i]) + "\n");
+            boardRowsStorage.push(createBoardRow(lineStorage, board));
             lineStorage = []
         } else {
-            let fillString = _makeSpaceBuffer(4) + data[i] + _makeSpaceBuffer(4);
-            lineStorage.push(fillString);
+            lineStorage.push(createBoardLine(data[i]));
         }
-    } 
-    return preResultStorage.join(_createLineRow(board));
+    }
+    const horizontalDivider = makeHorizontalDivider(board);
+    return boardRowsStorage.join(horizontalDivider);
 }
+
+function createBoardLine(marker: string): string {
+    return _makeSpaceBuffer(4) + marker + _makeSpaceBuffer(4);
+}
+
+function createBoardRow(lines: string[], board: IBoard): string {
+    return _createManyNonlineRows(board, 1) + lines.join("|") + _createManyNonlineRows(board, 1);
+}
+
+function makeHorizontalDivider(board: IBoard): string {
+    return _createLineRow(board);
+}
+
+
 function _makeSpaceBuffer(count: number): string {
     let buffer = "";
     for (let i = 0; i < count; i++) {
@@ -76,7 +91,7 @@ function _createManyNonlineRows(board: IBoard, count: number): string {
     return fill;
 }
 function _createLineRow(board: IBoard): string {
-    const rowLength = (board.width * 9) + board.width - 1
+    const rowLength = (board.width * DEFAULT_CELL_WIDTH) + board.width - 1
     let rowLine = "";
     for (let i = 0; i < rowLength; i++) {
         if (i < rowLength - 1) {
