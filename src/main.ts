@@ -25,6 +25,7 @@ import PlayerStore from './classes/PlayerStore';
 import { IPlayerStore } from './interfaces/IPlayerStore';
 import { IParserStore } from './interfaces/IParserStore';
 import { STATUS_NEW } from './lib/constants';
+import RendererStore from './classes/RendererStore';
 // import { IMove } from './interfaces/IMove';
 
 const parserStore = new ParserStore({ parserCollection: {} });
@@ -38,14 +39,17 @@ populatePlayerStore(playerStore);
 const delegatorArgs = { parserDictionary: t3ParserDictionary, parserStore }
 const parserDelegator = new ParserDelegator(delegatorArgs);
 
-const moduleRendererArgs = { renderTable: t3RenderTable }
+const moduleRendererArgs = { id: "mr-1", renderTable: t3RenderTable }
 const moduleRenderer = new ModuleRenderer(moduleRendererArgs);
+
+const rendererStore = new RendererStore({});
+rendererStore.add(moduleRenderer);
 
 const t3ModuleArgs = {
     id: "m-t3",
     name: "Tic Tac Toe",
     status: STATUS_NEW,
-    moduleRenderer,
+    moduleRenderer: "mr-1",
     parserDelegator,
     moduleData: {
         players: [P1_id, P2_id],
@@ -73,7 +77,8 @@ const dispatcherArgs = {
     view, 
     playerStore,
     moduleStore, 
-    executionTable, 
+    executionTable,
+    rendererStore,
     pre: [], 
     post: [], 
     otherProcessing: {} 

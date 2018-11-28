@@ -4,10 +4,11 @@ import { IModuleRenderer } from "../interfaces/IModuleRenderer";
 import { IRenderArgs } from "../interfaces/Args";
 
 export default class ModuleRenderer implements IModuleRenderer{
-
+    public id: string;
     public renderTable: IRenderTable;
 
-    constructor(args: { renderTable: any }) {
+    constructor(args: { id: string, renderTable: any }) {
+        this.id = args.id;
         this.renderTable = args.renderTable;
     }
 

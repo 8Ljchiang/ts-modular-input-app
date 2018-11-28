@@ -11,12 +11,12 @@ export default class Module implements IModule {
     public moduleRenderer: any;
     public status: string;
     
-    constructor(args: { id: string, name: string, parserDelegator: any, moduleRenderer: IModuleRenderer, moduleData?: {}, status?: string }) {
+    constructor(args: { id: string, name: string, parserDelegator: any, moduleRenderer: string, moduleData?: {}, status?: string }) {
         this.id = args.id;
         this.name = args.name;
         this.parserDelegator = args.parserDelegator;
         this.moduleRenderer = args.moduleRenderer;
-        this.moduleData = args.moduleData;
+        this.moduleData = args.moduleData || {};
         this.status = args.status || STATUS_DEFAULT;
     }
 
