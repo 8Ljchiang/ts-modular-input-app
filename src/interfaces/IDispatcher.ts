@@ -2,12 +2,13 @@ import { IAction } from './IAction';
 import { IView } from './IView';
 import { IPlayerStore } from './IPlayerStore';
 import { IModuleStore } from './IModuleStore';
-import { IPlayer } from './IPlayer';
+import { IRendererStore } from './IRendererStore';
 
 export interface IDispatcher {
 	view: IView;
 	playerStore: IPlayerStore;
 	moduleStore: IModuleStore;
+	rendererStore: IRendererStore;
 	process(action: IAction): void;
 	execute(action: IAction): void;
 	// getPlayer(playerId: string): IPlayer | null;

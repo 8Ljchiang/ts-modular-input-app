@@ -92,8 +92,12 @@ export function RENDER_MODULE_FN(action: IAction, dispatcher: IDispatcher): void
             module,
 			view: dispatcher.view,
 			playerStore: dispatcher.playerStore
-        }
-        module.moduleRenderer.render(args);
+		}
+		
+		const moduleRenderer = dispatcher.rendererStore.get(module.moduleRenderer);
+		if (moduleRenderer) {
+			moduleRenderer.render(args);
+		}
 	}
 }
 
