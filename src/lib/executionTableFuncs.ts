@@ -1,8 +1,10 @@
 import { IAction } from '../interfaces/IAction';
 import { IDispatcher } from '../interfaces/IDispatcher';
 import { IModule } from '../interfaces/IModule';
-import { STATUS_END, STATUS_NEW, STATUS_START } from './constants';
-import { t3GameCheck, showT3OpenMoves } from './actionBuilders';
+import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW } from './constants';
+import { t3GameCheckAction, showT3OpenMovesAction } from '../helpers/actionBuilders';
+import { T3PatternChecker } from '../classes/T3PatternChecker';
+import { t3WinPatterns3 } from './t3Patterns';
 
 export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 	// module copy is added to action refData via dispatcher _preExecution middleware.
@@ -24,15 +26,15 @@ export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 			
 			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
 		
-			const t3GameCheckAction = t3GameCheck(action.refData.moduleId);
-			t3GameCheckAction.refData.moveSuccess = true;
-			dispatcher.execute(t3GameCheckAction);
+			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+			gameCheckAction.refData.moveSuccess = true;
+			dispatcher.execute(gameCheckAction);
 		} else {
-			const t3GameCheckAction = t3GameCheck(action.refData.moduleId);
-			t3GameCheckAction.refData.moveSuccess = false;
-			dispatcher.execute(t3GameCheckAction);
+			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+			gameCheckAction.refData.moveSuccess = false;
+			dispatcher.execute(gameCheckAction);
 
-			const openMovesAction = showT3OpenMoves(action.refData.moduleId);;
+			const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
 			dispatcher.execute(openMovesAction);
 		}
 	}
@@ -107,20 +109,27 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 	const module = action.refData.module;
 	const { moduleId } = action.refData;
 	if (module.status === STATUS_START) {
-		const { moduleStore } = dispatcher;
+		const { moduleStore, playerStore } = dispatcher;
 		// Note: Check if there is a winner.
-		// const patternChecker = {};
-		// const { players, activePlayerIndex, board } = module.moduleData;
-		// const currentPlayer = players[activePlayerIndex];
-		// const currentMark = currentPlayer.mark;
-		// const markerPosittions = board.getMarkPositions(currentMark):
-		// if (patternChecker.containsPattern(markerPositions)) {
-		// 	module.setStatus("WINNER");
-		// }
+		const { players, activePlayerIndex, board } = module.moduleData;
+		const playerId = players[activePlayerIndex];
+		const currentPlayer = playerStore.get(playerId);
+		
+		if (currentPlayer) {
+			const patternChecker = new T3PatternChecker();
+			const currentMark = currentPlayer.mark;
+			const markerPosittions = board.getMarkPositions(currentMark);
+			const ended = patternChecker.containsPattern(markerPosittions, t3WinPatterns3);
+			if (ended) {
+				moduleStore.updateModule(moduleId, { status: STATUS_WINNER });
+				return;
+			}
+		}
+		
 	
 		// Note: Check if there the board is full.
 		if (module.moduleData.board.getEmptyPositions().length <= 0) {
-			moduleStore.updateModule(moduleId, { status: STATUS_END });
+			moduleStore.updateModule(moduleId, { status: STATUS_DRAW });
 			
 			// module.setStatus(STATUS_END);
 			// module.setStatus("DRAW");

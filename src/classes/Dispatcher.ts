@@ -2,7 +2,7 @@ import { IDispatcher } from "../interfaces/IDispatcher";
 import { IView } from "../interfaces/IView";
 import { IAction } from "../interfaces/IAction";
 import { IModuleStore } from "../interfaces/IModuleStore";
-import { renderModule } from "../lib/ActionBuilders";
+import { renderModuleAction } from "../helpers/ActionBuilders";
 import { IPlayerStore } from "../interfaces/IPlayerStore";
 import { IPlayer } from "../interfaces/IPlayer";
 import Module from '../classes/Module';
@@ -48,28 +48,6 @@ export default class Dispatcher implements IDispatcher {
 			this.otherProcessing[actionType] = [{ fn, next: true }];
 		}
 	}
-
-	// public updateModule(moduleId: string, updateObject: { [key: string]: any }): void {
-	// 	this.moduleStore.updateModule(moduleId, updateObject);
-	// }
-
-	// public updateModuleData(moduleId: string, updateDataObject: { [key: string]: any }): void {
-	// 	this.moduleStore.updateModuleData(moduleId, updateDataObject);
-	// }
-
-	// public updateModuleDataMove(moduleId: string, addMoveArgs: { [key: string]: any }): void {
-	// 	const module = this.moduleStore.getModule(moduleId);
-	// 	module.moduleData.board.addMove(addMoveArgs);
-	// }
-
-	// public resetModuleData(moduleId: string): void {
-	// 	const module = this.moduleStore.getModule(moduleId);
-	// 	module.moduleData.board.reset();
-	// }
-
-	// public getPlayer(playerId: string): IPlayer | null {
-	// 	return this.playerStore.get(playerId);
-	// }
 	
 	private _preProcess(action: IAction): void {
 		
@@ -91,7 +69,7 @@ export default class Dispatcher implements IDispatcher {
 	private _postProcess(action: IAction): void {
 		// This is kind of like middleware.
 
-		const renderAction = renderModule(action.refData.moduleId);
+		const renderAction = renderModuleAction(action.refData.moduleId);
 		this.execute(renderAction);
 
 		// Future Dev:

@@ -2,7 +2,7 @@ import { IContext } from "../interfaces/IContext";
 import { IContextStore } from "../interfaces/IContextStore";
 import { IDispatcher } from "../interfaces/IDispatcher";
 
-import { renderModule, handleInput } from "../lib/ActionBuilders";
+import { renderModuleAction, handleInputAction } from "../helpers/ActionBuilders";
 
 export default class App {
     public dispatcher: IDispatcher;
@@ -38,14 +38,14 @@ export default class App {
             // }
             // currModule.handleInput(args);
 
-            const action = handleInput(line, context.moduleId);
+            const action = handleInputAction(line, context.moduleId);
             this.dispatcher.execute(action);
         });
     }
 
     run() {
         const context: IContext = this.contextStore.getContext(this.currentContextReference);
-        const action = renderModule(context.moduleId);
+        const action = renderModuleAction(context.moduleId);
         this.dispatcher.execute(action);
         
         // Note:
