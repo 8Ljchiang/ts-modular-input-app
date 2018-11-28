@@ -48,28 +48,6 @@ export default class Dispatcher implements IDispatcher {
 			this.otherProcessing[actionType] = [{ fn, next: true }];
 		}
 	}
-
-	// public updateModule(moduleId: string, updateObject: { [key: string]: any }): void {
-	// 	this.moduleStore.updateModule(moduleId, updateObject);
-	// }
-
-	// public updateModuleData(moduleId: string, updateDataObject: { [key: string]: any }): void {
-	// 	this.moduleStore.updateModuleData(moduleId, updateDataObject);
-	// }
-
-	// public updateModuleDataMove(moduleId: string, addMoveArgs: { [key: string]: any }): void {
-	// 	const module = this.moduleStore.getModule(moduleId);
-	// 	module.moduleData.board.addMove(addMoveArgs);
-	// }
-
-	// public resetModuleData(moduleId: string): void {
-	// 	const module = this.moduleStore.getModule(moduleId);
-	// 	module.moduleData.board.reset();
-	// }
-
-	// public getPlayer(playerId: string): IPlayer | null {
-	// 	return this.playerStore.get(playerId);
-	// }
 	
 	private _preProcess(action: IAction): void {
 		

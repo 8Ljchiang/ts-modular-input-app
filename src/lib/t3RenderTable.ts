@@ -2,10 +2,13 @@ import {IBoard} from '../interfaces/IBoard';
 import {IRenderTable } from '../interfaces/IRenderTable';
 import {STATUS_DEFAULT, STATUS_END, STATUS_NEW, STATUS_START, STATUS_DRAW, STATUS_WINNER } from '../lib/constants';
 import { IRenderArgs } from '../interfaces/Args';
+import { t3WinPatterns3 } from '../lib/t3Patterns';
+import { findPattern } from '../helpers/patternCheckHelpers';
+import { colors, styles } from './colors';
 
 const POSITION_OFFSET = 1;
 const DEFAULT_CELL_WIDTH = 9;
-const GAME_TITLE = "Tic Tac Toe\n\n"
+const GAME_TITLE = styles.bold + "Tic Tac Toe\n\n" + styles.unbold;
 
 export const t3RenderTable: IRenderTable = {
     [STATUS_DEFAULT]: function(args: IRenderArgs): string {
@@ -17,41 +20,59 @@ export const t3RenderTable: IRenderTable = {
         return welcome;
     },
     [STATUS_START]: function(args: IRenderArgs): string {
-        const { players, activePlayerIndex } = args.module.moduleData;
+        const { players, activePlayerIndex, board } = args.module.moduleData;
         const playerId = players[activePlayerIndex];
         const player = args.playerStore.get(playerId);
         const playerName = player ? player.name : 'Unknown';
-        const boardString = renderBoard(args.module.moduleData.board);
+        const boardString = renderBoard(board, board.getData());
         const { started } = args.module.moduleData.messages;
         return GAME_TITLE + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
     },
     [STATUS_END]: function(args: IRenderArgs): string {
-        const boardString = renderBoard(args.module.moduleData.board);
+        const { board } = args.module.moduleData;
+        const boardString = renderBoard(board, board.getData());
         const { end } = args.module.moduleData.messages;
         return GAME_TITLE + boardString + "\n" + end;
     },
     [STATUS_WINNER]: function(args: IRenderArgs): string {
-        const boardString = renderBoard(args.module.moduleData.board);
-        const { activePlayerIndex, players } = args.module.moduleData;
+        const { board, activePlayerIndex, players } = args.module.moduleData;
         const playerId = players[activePlayerIndex];
         const currentPlayer = args.playerStore.get(playerId);
         const playerName = currentPlayer ? currentPlayer.name : "Unknown";
         const playerMark = currentPlayer ? currentPlayer.mark : "Unknown";
         const { winner, end } = args.module.moduleData.messages;
-        return GAME_TITLE + boardString + "\n" + winner.replace("{{PLAYER_NAME}}", playerName).replace("{{PLAYER_MARK}}", playerMark) + "\n" + end;
+        
+        const winningPattern = findPattern(board.getMarkPositions(playerMark), t3WinPatterns3) || [];
+        const highlightColor = colors.yellow;
+        const boardString = renderBoard(board, addHighlightsToPositions(board.getData(), winningPattern, highlightColor));
+
+        return GAME_TITLE + boardString + "\n" + winner.replace("{{PLAYER_NAME}}", playerName).replace("{{PLAYER_MARK}}", playerMark).replace("{{PATTERN}}", winningPattern.join(", ")) + "\n" + end;
     },
     [STATUS_DRAW]: function(args: IRenderArgs): string {
-        const boardString = renderBoard(args.module.moduleData.board);
+        const { board } = args.module.moduleData;
+        const boardString = renderBoard(board, board.getData());
         const { draw, end } = args.module.moduleData.messages;
         return GAME_TITLE + boardString + "\n" + draw + "\n" + end;
     }
 }
 
-function renderBoard(board: IBoard): string {
+function addHighlightsToPositions(positionsData: string[], highlightPositions: number[], highlightColor: string): string[] {
+    return positionsData.map((positionMark, index) => {
+        if (highlightPositions.indexOf(_adjustIndexToPosition(index)) !== -1) {
+            return highlightColor + styles.bold + positionMark + styles.unbold + colors.reset;
+        }
+        return positionMark;
+    });
+}
+
+function renderBoard(board: IBoard, movesData: string[]): string {
     const boardRowsStorage = [];
     let lineStorage = [];
-    const data = board.getData().map((position, index) => {
-        return position === " " ? (index+1).toString() : position;
+    const data = movesData.map((positionMarker: string, index: number) => {
+        if (positionMarker === " ") {
+            return colors.blue + _adjustIndexToPosition(index).toString() + colors.reset;
+        }
+        return positionMarker;
     });
 
     for (let i = 0; i < data.length; i++) {
