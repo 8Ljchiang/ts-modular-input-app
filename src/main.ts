@@ -34,11 +34,11 @@ const P2_id = 'p2';
 const playerStore = new PlayerStore({});
 populatePlayerStore(playerStore);
 
-const pDelArgs = { parserDictionary: t3ParserDictionary, parserStore }
-const parserDelegator = new ParserDelegator(pDelArgs);
+const delegatorArgs = { parserDictionary: t3ParserDictionary, parserStore }
+const parserDelegator = new ParserDelegator(delegatorArgs);
 
-const mRendArgs = { renderTable: t3RenderTable }
-const moduleRenderer = new ModuleRenderer(mRendArgs);
+const moduleRendererArgs = { renderTable: t3RenderTable }
+const moduleRenderer = new ModuleRenderer(moduleRendererArgs);
 
 const t3ModuleArgs = {
     id: "m-t3",
@@ -90,8 +90,12 @@ const appT3 = new App(appArgs);
 appT3.run();
 
 function populatePlayerStore(playerStore: IPlayerStore): void {
-    const player1 = new Player({ id: P1_id, name: "Sam", mark: "X" });
-    const player2 = new Player({ id: P2_id, name: "Dan", mark: "O" });
+    const DEFAULT_P1 = 'Player1';
+    const DEFAULT_P2 = 'Player2';
+    const MARK_1 = 'X';
+    const MARK_2 = 'O';
+    const player1 = new Player({ id: P1_id, name: DEFAULT_P1, mark: MARK_1 });
+    const player2 = new Player({ id: P2_id, name: DEFAULT_P2, mark: MARK_2 });
     playerStore.add(player1);
     playerStore.add(player2);
 }
@@ -101,4 +105,5 @@ function populateParserStore(parserStore: IParserStore): void {
     parserStore.addParser(t3StartParser);
     parserStore.addParser(t3EndParser);
 }
+
 // TODO: Create containers.
