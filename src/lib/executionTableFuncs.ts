@@ -1,7 +1,7 @@
 import { IAction } from '../interfaces/IAction';
 import { IDispatcher } from '../interfaces/IDispatcher';
 import { IModule } from '../interfaces/IModule';
-import { STATUS_END, STATUS_NEW, STATUS_START } from './constants';
+import { STATUS_END, STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW } from './constants';
 import { t3GameCheck, showT3OpenMoves } from './actionBuilders';
 import { T3PatternChecker } from '../classes/T3PatternChecker';
 import { t3WinPatterns3 } from './t3Patterns';
@@ -121,7 +121,7 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 			const markerPosittions = board.getMarkPositions(currentMark);
 			const ended = patternChecker.containsPattern(markerPosittions, t3WinPatterns3);
 			if (ended) {
-				moduleStore.updateModule(moduleId, { status: STATUS_END });
+				moduleStore.updateModule(moduleId, { status: STATUS_WINNER });
 				return;
 			}
 		}
@@ -129,7 +129,7 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 	
 		// Note: Check if there the board is full.
 		if (module.moduleData.board.getEmptyPositions().length <= 0) {
-			moduleStore.updateModule(moduleId, { status: STATUS_END });
+			moduleStore.updateModule(moduleId, { status: STATUS_DRAW });
 			
 			// module.setStatus(STATUS_END);
 			// module.setStatus("DRAW");

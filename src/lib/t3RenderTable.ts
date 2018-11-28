@@ -1,35 +1,51 @@
 import {IBoard} from '../interfaces/IBoard';
 import {IRenderTable } from '../interfaces/IRenderTable';
-import {STATUS_DEFAULT, STATUS_END, STATUS_NEW, STATUS_START } from '../lib/constants';
+import {STATUS_DEFAULT, STATUS_END, STATUS_NEW, STATUS_START, STATUS_DRAW, STATUS_WINNER } from '../lib/constants';
 import { IRenderArgs } from '../interfaces/Args';
 import { listeners } from 'cluster';
 
 const POSITION_OFFSET = 1;
 const DEFAULT_CELL_WIDTH = 9;
+const GAME_TITLE = "Tic Tac Toe\n\n"
 
 export const t3RenderTable: IRenderTable = {
-    [STATUS_DEFAULT]: function(args: IRenderArgs) {
+    [STATUS_DEFAULT]: function(args: IRenderArgs): string {
         const { welcome } = args.module.moduleData.messages;
         return welcome;
     },
-    [STATUS_NEW]: function(args: IRenderArgs) {
+    [STATUS_NEW]: function(args: IRenderArgs): string {
         const { welcome } = args.module.moduleData.messages;
         return welcome;
     },
-    [STATUS_START]: function(args: IRenderArgs) {
+    [STATUS_START]: function(args: IRenderArgs): string {
         const { players, activePlayerIndex } = args.module.moduleData;
         const playerId = players[activePlayerIndex];
         const player = args.playerStore.get(playerId);
         const playerName = player ? player.name : 'Unknown';
         const boardString = renderBoard(args.module.moduleData.board);
         const { started } = args.module.moduleData.messages;
-        return "Tic Tac Toe\n\n" + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
+        return GAME_TITLE + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
     },
-    [STATUS_END]: function(args: IRenderArgs) {
+    [STATUS_END]: function(args: IRenderArgs): string {
         const boardString = renderBoard(args.module.moduleData.board);
         const { end } = args.module.moduleData.messages;
-        return "Tic Tac Toe\n\n" + boardString + "\n" + end;
+        return GAME_TITLE + boardString + "\n" + end;
     },
+    [STATUS_WINNER]: function(args: IRenderArgs): string {
+        const boardString = renderBoard(args.module.moduleData.board);
+        const { activePlayerIndex, players } = args.module.moduleData;
+        const playerId = players[activePlayerIndex];
+        const currentPlayer = args.playerStore.get(playerId);
+        const playerName = currentPlayer ? currentPlayer.name : "Unknown";
+        const playerMark = currentPlayer ? currentPlayer.mark : "Unknown";
+        const { winner, end } = args.module.moduleData.messages;
+        return GAME_TITLE + boardString + "\n" + winner.replace("{{PLAYER_NAME}}", playerName).replace("{{PLAYER_MARK}}", playerMark) + "\n" + end;
+    },
+    [STATUS_DRAW]: function(args: IRenderArgs): string {
+        const boardString = renderBoard(args.module.moduleData.board);
+        const { draw, end } = args.module.moduleData.messages;
+        return GAME_TITLE + boardString + "\n" + draw + "\n" + end;
+    }
 }
 
 function renderBoard(board: IBoard): string {
