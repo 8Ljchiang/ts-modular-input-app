@@ -16,7 +16,9 @@ export const t3RenderTable: IRenderTable = {
     },
     [STATUS_START]: function(args: IRenderArgs) {
         const { players, activePlayerIndex } = args.module.moduleData;
-        const playerName = players[activePlayerIndex].name;
+        const playerId = players[activePlayerIndex];
+        const player = args.playerStore.get(playerId);
+        const playerName = player ? player.name : 'Unknown';
         const boardString = renderBoard(args.module.moduleData.board);
         const { started } = args.module.moduleData.messages;
         return "Tic Tac Toe\n\n" + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);

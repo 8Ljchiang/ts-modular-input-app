@@ -21,21 +21,24 @@ import { t3Messages } from './lib/t3Messages';
 
 import ContextStore from './classes/ContextStore';
 import { t3ContextCollection } from './lib/t3ContextCollection';
+import PlayerStore from './classes/PlayerStore';
+import { IPlayerStore } from './interfaces/IPlayerStore';
+import { IParserStore } from './interfaces/IParserStore';
 // import { IMove } from './interfaces/IMove';
 
 const parserStore = new ParserStore({ parserCollection: {} });
-parserStore.addParser(t3NewParser);
-parserStore.addParser(t3StartParser);
-parserStore.addParser(t3EndParser);
+populateParserStore(parserStore);
 
-const pDelArgs = { parserDictionary: t3ParserDictionary, parserStore }
-const parserDelegator = new ParserDelegator(pDelArgs);
+const P1_id = 'p1';
+const P2_id = 'p2';
+const playerStore = new PlayerStore({});
+populatePlayerStore(playerStore);
 
-const mRendArgs = { renderTable: t3RenderTable }
-const moduleRenderer = new ModuleRenderer(mRendArgs);
+const delegatorArgs = { parserDictionary: t3ParserDictionary, parserStore }
+const parserDelegator = new ParserDelegator(delegatorArgs);
 
-const player1 = new Player({ id: "p1", name: "Sam", mark: "X" });
-const player2 = new Player({ id: "p2", name: "Dan", mark: "O" });
+const moduleRendererArgs = { renderTable: t3RenderTable }
+const moduleRenderer = new ModuleRenderer(moduleRendererArgs);
 
 const t3ModuleArgs = {
     id: "m-t3",
@@ -43,10 +46,8 @@ const t3ModuleArgs = {
     status: "NEW",
     moduleRenderer,
     parserDelegator,
-    currentContextRef: "c1",
-    previousContextRef: [],
     moduleData: {
-        players: [player1, player2],
+        players: [P1_id, P2_id],
         board: new Board({ height: 3, width: 3, moves: [] }),
         activePlayerIndex: 0,
         messages: t3Messages
@@ -54,21 +55,55 @@ const t3ModuleArgs = {
 }
 
 const t3Module = new Module(t3ModuleArgs);
-
 const moduleStore = new ModuleStore({})
 moduleStore.addModule(t3Module);
 
 const contextStore = new ContextStore({ contextCollection: t3ContextCollection });
 
 const inputInterface = readline.createInterface(process.stdin, process.stdout);
-const view = new View({ inputInterface, outputInterface: console });
-const dispatcher = new Dispatcher({ view, moduleStore, executionTable, pre: [], post: [], otherProcessing: {} });
 
-const appArgs = { dispatcher, moduleStore, contextStore, currentContextReference: "c1" };
+const viewArgs = { 
+    inputInterface, 
+    outputInterface: console 
+};
+const view = new View(viewArgs);
+
+const dispatcherArgs = { 
+    view, 
+    playerStore,
+    moduleStore, 
+    executionTable, 
+    pre: [], 
+    post: [], 
+    otherProcessing: {} 
+};
+const dispatcher = new Dispatcher(dispatcherArgs);
+
+const appArgs = { 
+    dispatcher, 
+    contextStore, 
+    currentContextReference: "c1" 
+};
+
 const appT3 = new App(appArgs);
 
 appT3.run();
 
+function populatePlayerStore(playerStore: IPlayerStore): void {
+    const DEFAULT_P1 = 'Player1';
+    const DEFAULT_P2 = 'Player2';
+    const MARK_1 = 'X';
+    const MARK_2 = 'O';
+    const player1 = new Player({ id: P1_id, name: DEFAULT_P1, mark: MARK_1 });
+    const player2 = new Player({ id: P2_id, name: DEFAULT_P2, mark: MARK_2 });
+    playerStore.add(player1);
+    playerStore.add(player2);
+}
 
+function populateParserStore(parserStore: IParserStore): void {
+    parserStore.addParser(t3NewParser);
+    parserStore.addParser(t3StartParser);
+    parserStore.addParser(t3EndParser);
+}
 
 // TODO: Create containers.

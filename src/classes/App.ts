@@ -1,9 +1,6 @@
 import { IContext } from "../interfaces/IContext";
 import { IContextStore } from "../interfaces/IContextStore";
 import { IDispatcher } from "../interfaces/IDispatcher";
-// import { IModule } from "../interfaces/IModule";
-import { IModuleStore } from '../interfaces/IModuleStore';
-import { IView } from "../interfaces/IView";
 
 import { renderModule, handleInput } from "../lib/ActionBuilders";
 
@@ -14,7 +11,7 @@ export default class App {
     public currentContextReference: any;
     public previousContextReferences: any;
     
-    constructor(args: { dispatcher: IDispatcher, moduleStore: IModuleStore, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string, view?: IView }) {
+    constructor(args: { dispatcher: IDispatcher, contextStore: IContextStore, currentContextRef?: string, previousContextRef?: string }) {
         this.dispatcher = args.dispatcher;
         this.contextStore = args.contextStore;
         // this.moduleStore = args.moduleStore;
@@ -40,6 +37,7 @@ export default class App {
             //     moduleId: context.moduleId
             // }
             // currModule.handleInput(args);
+
             const action = handleInput(line, context.moduleId);
             this.dispatcher.execute(action);
         });

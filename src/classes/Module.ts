@@ -20,7 +20,8 @@ export default class Module implements IModule {
         this.status = args.status || STATUS_DEFAULT;
     }
 
-    handleInput(args: IParseArgs) {
+    public handleInput(args: IParseArgs) {
+        // console.log("HANDLING INPUT");
         const newArgs = {
             ...args,
             module: this,
@@ -28,7 +29,7 @@ export default class Module implements IModule {
         this.parserDelegator.delegate(newArgs);
     }
 
-    getStatus(): string {
+    public getStatus(): string {
         return this.status;
     }
 
