@@ -24,6 +24,7 @@ import { t3ContextCollection } from './lib/t3ContextCollection';
 import PlayerStore from './classes/PlayerStore';
 import { IPlayerStore } from './interfaces/IPlayerStore';
 import { IParserStore } from './interfaces/IParserStore';
+import { STATUS_NEW } from './lib/constants';
 // import { IMove } from './interfaces/IMove';
 
 const parserStore = new ParserStore({ parserCollection: {} });
@@ -43,7 +44,7 @@ const moduleRenderer = new ModuleRenderer(moduleRendererArgs);
 const t3ModuleArgs = {
     id: "m-t3",
     name: "Tic Tac Toe",
-    status: "NEW",
+    status: STATUS_NEW,
     moduleRenderer,
     parserDelegator,
     moduleData: {

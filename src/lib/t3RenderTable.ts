@@ -8,7 +8,6 @@ import { colors, styles } from './colors';
 
 const POSITION_OFFSET = 1;
 const DEFAULT_CELL_WIDTH = 9;
-const GAME_TITLE = styles.bold + "Tic Tac Toe\n\n" + styles.unbold;
 
 export const t3RenderTable: IRenderTable = {
     [STATUS_DEFAULT]: function(args: IRenderArgs): string {
@@ -26,13 +25,13 @@ export const t3RenderTable: IRenderTable = {
         const playerName = player ? player.name : 'Unknown';
         const boardString = renderBoard(board, board.getData());
         const { started } = args.module.moduleData.messages;
-        return GAME_TITLE + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
+        return args.module.name + "\n\n" + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
     },
     [STATUS_END]: function(args: IRenderArgs): string {
         const { board } = args.module.moduleData;
         const boardString = renderBoard(board, board.getData());
         const { end } = args.module.moduleData.messages;
-        return GAME_TITLE + boardString + "\n" + end;
+        return args.module.name + "\n\n" + boardString + "\n" + end;
     },
     [STATUS_WINNER]: function(args: IRenderArgs): string {
         const { board, activePlayerIndex, players } = args.module.moduleData;
@@ -46,13 +45,13 @@ export const t3RenderTable: IRenderTable = {
         const highlightColor = colors.yellow;
         const boardString = renderBoard(board, addHighlightsToPositions(board.getData(), winningPattern, highlightColor));
 
-        return GAME_TITLE + boardString + "\n" + winner.replace("{{PLAYER_NAME}}", playerName).replace("{{PLAYER_MARK}}", playerMark).replace("{{PATTERN}}", winningPattern.join(", ")) + "\n" + end;
+        return args.module.name + "\n\n" + boardString + "\n" + winner.replace("{{PLAYER_NAME}}", playerName).replace("{{PLAYER_MARK}}", playerMark).replace("{{PATTERN}}", winningPattern.join(", ")) + "\n" + end;
     },
     [STATUS_DRAW]: function(args: IRenderArgs): string {
         const { board } = args.module.moduleData;
         const boardString = renderBoard(board, board.getData());
         const { draw, end } = args.module.moduleData.messages;
-        return GAME_TITLE + boardString + "\n" + draw + "\n" + end;
+        return args.module.name + "\n\n" + boardString + "\n" + draw + "\n" + end;
     }
 }
 
