@@ -1,7 +1,7 @@
 import { T3_MOVE, T3_NEW_GAME, RENDER_MODULE, SHOW_OPTIONS, SHOW_T3_OPEN_MOVES, SET_MODULE_STATUS, CYCLE_PLAYER, HANDLE_INPUT, T3_GAME_CHECK } from './actionTypes';
 import { IAction } from '../interfaces/IAction';
 
-export function addMove(move: any, moduleId: string): IAction {
+export function addMoveAction(move: any, moduleId: string): IAction {
 	const action: IAction = {
 		type: T3_MOVE,
 		payload: {
@@ -15,7 +15,7 @@ export function addMove(move: any, moduleId: string): IAction {
 	return action;
 }
 
-export function setStatus(status: string, moduleId: string): IAction {
+export function setStatusAction(status: string, moduleId: string): IAction {
 	const action: IAction = {
 		type: SET_MODULE_STATUS,
 		payload: {
@@ -29,7 +29,7 @@ export function setStatus(status: string, moduleId: string): IAction {
 	return action;
 }
 
-export function cyclePlayer(moduleId: string): IAction {
+export function cyclePlayerAction(moduleId: string): IAction {
 	const action: IAction = {
 		type: CYCLE_PLAYER,
 		payload: {},
@@ -41,7 +41,7 @@ export function cyclePlayer(moduleId: string): IAction {
 	return action;
 }
 
-export function showOptions(options: string[], moduleId: string): IAction {
+export function showOptionsAction(options: string[], moduleId: string): IAction {
 	const action: IAction = {
 		type: SHOW_OPTIONS,
 		payload: {
@@ -55,7 +55,7 @@ export function showOptions(options: string[], moduleId: string): IAction {
 	return action;
 }
 
-export function showT3OpenMoves(moduleId: string): IAction {
+export function showT3OpenMovesAction(moduleId: string): IAction {
 	const action: IAction = {
 		type: SHOW_T3_OPEN_MOVES,
 		payload: {},
@@ -67,7 +67,7 @@ export function showT3OpenMoves(moduleId: string): IAction {
 	return action;
 }
 
-export function t3NewGame(moduleId: string): IAction {
+export function t3NewGameAction(moduleId: string): IAction {
 	const action: IAction = {
 		type: T3_NEW_GAME,
 		payload: {},
@@ -79,7 +79,7 @@ export function t3NewGame(moduleId: string): IAction {
 	return action;
 }
 
-export function renderModule(moduleId: string): IAction {
+export function renderModuleAction(moduleId: string): IAction {
 	const action: IAction = {
 		type: RENDER_MODULE,
 		payload: {},
@@ -91,7 +91,7 @@ export function renderModule(moduleId: string): IAction {
 	return action;
 }
 
-export function handleInput(input: string, moduleId: string): IAction {
+export function handleInputAction(input: string, moduleId: string): IAction {
 	const action: IAction = {
 		type: HANDLE_INPUT,
 		payload: {
@@ -105,7 +105,7 @@ export function handleInput(input: string, moduleId: string): IAction {
 	return action;
 }
 
-export function t3GameCheck(moduleId: string): IAction {
+export function t3GameCheckAction(moduleId: string): IAction {
 	const action: IAction = {
 		type: T3_GAME_CHECK,
 		payload: {},

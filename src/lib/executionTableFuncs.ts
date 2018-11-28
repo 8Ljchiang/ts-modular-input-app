@@ -1,8 +1,8 @@
 import { IAction } from '../interfaces/IAction';
 import { IDispatcher } from '../interfaces/IDispatcher';
 import { IModule } from '../interfaces/IModule';
-import { STATUS_END, STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW } from './constants';
-import { t3GameCheck, showT3OpenMoves } from './actionBuilders';
+import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW } from './constants';
+import { t3GameCheckAction, showT3OpenMovesAction } from '../helpers/actionBuilders';
 import { T3PatternChecker } from '../classes/T3PatternChecker';
 import { t3WinPatterns3 } from './t3Patterns';
 
@@ -26,15 +26,15 @@ export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 			
 			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
 		
-			const t3GameCheckAction = t3GameCheck(action.refData.moduleId);
-			t3GameCheckAction.refData.moveSuccess = true;
-			dispatcher.execute(t3GameCheckAction);
+			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+			gameCheckAction.refData.moveSuccess = true;
+			dispatcher.execute(gameCheckAction);
 		} else {
-			const t3GameCheckAction = t3GameCheck(action.refData.moduleId);
-			t3GameCheckAction.refData.moveSuccess = false;
-			dispatcher.execute(t3GameCheckAction);
+			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+			gameCheckAction.refData.moveSuccess = false;
+			dispatcher.execute(gameCheckAction);
 
-			const openMovesAction = showT3OpenMoves(action.refData.moduleId);;
+			const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
 			dispatcher.execute(openMovesAction);
 		}
 	}

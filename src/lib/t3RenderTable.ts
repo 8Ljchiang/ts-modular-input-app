@@ -2,7 +2,6 @@ import {IBoard} from '../interfaces/IBoard';
 import {IRenderTable } from '../interfaces/IRenderTable';
 import {STATUS_DEFAULT, STATUS_END, STATUS_NEW, STATUS_START, STATUS_DRAW, STATUS_WINNER } from '../lib/constants';
 import { IRenderArgs } from '../interfaces/Args';
-import { listeners } from 'cluster';
 
 const POSITION_OFFSET = 1;
 const DEFAULT_CELL_WIDTH = 9;
@@ -51,7 +50,9 @@ export const t3RenderTable: IRenderTable = {
 function renderBoard(board: IBoard): string {
     const boardRowsStorage = [];
     let lineStorage = [];
-    const data = board.getData();
+    const data = board.getData().map((position, index) => {
+        return position === " " ? (index+1).toString() : position;
+    });
 
     for (let i = 0; i < data.length; i++) {
         const position = _adjustIndexToPosition(i);

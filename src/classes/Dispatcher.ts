@@ -2,7 +2,7 @@ import { IDispatcher } from "../interfaces/IDispatcher";
 import { IView } from "../interfaces/IView";
 import { IAction } from "../interfaces/IAction";
 import { IModuleStore } from "../interfaces/IModuleStore";
-import { renderModule } from "../lib/ActionBuilders";
+import { renderModuleAction } from "../helpers/ActionBuilders";
 import { IPlayerStore } from "../interfaces/IPlayerStore";
 import { IPlayer } from "../interfaces/IPlayer";
 import Module from '../classes/Module';
@@ -91,7 +91,7 @@ export default class Dispatcher implements IDispatcher {
 	private _postProcess(action: IAction): void {
 		// This is kind of like middleware.
 
-		const renderAction = renderModule(action.refData.moduleId);
+		const renderAction = renderModuleAction(action.refData.moduleId);
 		this.execute(renderAction);
 
 		// Future Dev:

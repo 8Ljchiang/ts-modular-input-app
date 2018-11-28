@@ -1,10 +1,10 @@
 import { STATUS_START } from "./constants";
 import { IParseArgs } from '../interfaces/Args';
-import { addMove, setStatus, showOptions, showT3OpenMoves, t3NewGame } from './actionBuilders';
+import { addMoveAction, setStatusAction, showOptionsAction, showT3OpenMovesAction, t3NewGameAction } from '../helpers/actionBuilders';
 
 export const newGameHandlers = {
     ready: function(args: IParseArgs) {
-        const action = setStatus(STATUS_START, args.moduleId);
+        const action = setStatusAction(STATUS_START, args.moduleId);
         args.dispatcher.process(action);
     },
     default: function(args: IParseArgs) {
@@ -12,7 +12,7 @@ export const newGameHandlers = {
     },
     error: function(args: IParseArgs) {
 		const options = this.options({});
-		const action = showOptions(options, args.moduleId);
+		const action = showOptionsAction(options, args.moduleId);
 		args.dispatcher.process(action);
     },
     options: function(args: any) { 
@@ -22,11 +22,11 @@ export const newGameHandlers = {
 
 export const startedGameHandlers = {
     default: function(args: IParseArgs) {
-		const action = addMove(args.input, args.moduleId);
+		const action = addMoveAction(args.input, args.moduleId);
 		args.dispatcher.process(action);
     },
     error: function(args: IParseArgs) {
-		const action = showT3OpenMoves(args.moduleId);
+		const action = showT3OpenMovesAction(args.moduleId);
 		args.dispatcher.process(action);
     },
     options: function(args: any) { 
@@ -36,7 +36,7 @@ export const startedGameHandlers = {
 
 export const endGameHandlers = {
     new: function(args: IParseArgs) {
-		const action = t3NewGame(args.moduleId);
+		const action = t3NewGameAction(args.moduleId);
         args.dispatcher.process(action);
     },
     quit: function(args: any) {
@@ -47,7 +47,7 @@ export const endGameHandlers = {
     },
     error: function(args: any) {
         const options = this.options({});
-		const action = showOptions(options, args.moduleId);
+		const action = showOptionsAction(options, args.moduleId);
 		args.dispatcher.process(action);
     },
     options: function(args: any) { 
