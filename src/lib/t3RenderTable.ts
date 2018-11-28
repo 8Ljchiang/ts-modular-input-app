@@ -29,7 +29,7 @@ export const t3RenderTable: IRenderTable = {
         const boardString = renderBoard(args.module.moduleData.board);
         const { end } = args.module.moduleData.messages;
         return "Tic Tac Toe\n\n" + boardString + "\n" + end;
-    }
+    },
 }
 
 function renderBoard(board: IBoard): string {
