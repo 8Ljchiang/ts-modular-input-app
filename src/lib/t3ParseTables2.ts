@@ -29,11 +29,7 @@ export const startedGameHandlers = {
 		const action = showT3OpenMoves(args.moduleId);
 		args.dispatcher.process(action);
     },
-<<<<<<< HEAD
-    options: function(args: IParseArgs) { 
-=======
     options: function(args: any) { 
->>>>>>> feature/playerStore
         return args.dispatcher.moduleStore.getModule(args.moduleId).moduleData.board.getEmptyPositions().map((p: any) => p.toString());
     }
 }
