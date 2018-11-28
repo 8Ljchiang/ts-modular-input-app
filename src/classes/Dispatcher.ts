@@ -6,20 +6,23 @@ import { renderModuleAction } from "../helpers/ActionBuilders";
 import { IPlayerStore } from "../interfaces/IPlayerStore";
 import { IPlayer } from "../interfaces/IPlayer";
 import Module from '../classes/Module';
+import { IRendererStore } from "../interfaces/IRendererStore";
 
 export default class Dispatcher implements IDispatcher {
 	public view: IView;
 	public moduleStore: IModuleStore;
 	public playerStore: IPlayerStore;
+	public rendererStore: IRendererStore;
 	public preProcessing: Array<{ fn: Function; next: boolean }>;
 	public postProcessing: Array<{ fn: Function; next: boolean }>;
 	public otherProcessing: { [key: string]: Array<any> };
 	public executionTable: { [key: string]: Function };
 
-	constructor(args: { view: IView, moduleStore: IModuleStore, playerStore: IPlayerStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
+	constructor(args: { view: IView, moduleStore: IModuleStore, rendererStore: IRendererStore, playerStore: IPlayerStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
 		this.view = args.view;
 		this.moduleStore = args.moduleStore;
 		this.playerStore = args.playerStore;
+		this.rendererStore = args.rendererStore;
 		this.preProcessing = args.pre;
 		this.postProcessing = args.post;
 		this.executionTable = args.executionTable;

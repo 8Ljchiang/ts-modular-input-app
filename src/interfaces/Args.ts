@@ -19,5 +19,5 @@ export interface IParseTableArgs {
 export interface IRenderArgs {
 	module: IModule;
 	view: IView;
-	playerStore: IPlayerStore
+	playerStore: IPlayerStore;
 }

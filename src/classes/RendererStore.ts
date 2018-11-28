@@ -1,22 +1,39 @@
 import { IRendererStore } from '../interfaces/IRendererStore';
 import { IModuleRenderer } from '../interfaces/IModuleRenderer';
+import { ICollection } from '../interfaces/ICollection';
 
 export default class RendererStore implements IRendererStore {
 	public collection: any;
 	
-	constructor(collection: any) {
+	constructor(collection: ICollection<IModuleRenderer>) {
 		this.collection = collection || {};
 	}
-	get(objectId: string): IModuleRenderer | null {
-		throw new Error("Method not implemented.");
+	get(id: string): IModuleRenderer | null {
+		const result = this.collection[id]
+		if (result) {
+			return result;
+		}
+		return null;
 	}
 	add(object: IModuleRenderer): IModuleRenderer | null {
-		throw new Error("Method not implemented.");
+		const id = object.id;
+		this.collection[id] = object;
+		return this.collection[id];
 	}
-	remove(objectId: string): IModuleRenderer | null {
-		throw new Error("Method not implemented.");
+	remove(id: string): IModuleRenderer | null {
+		const result = this.collection[id]
+		if (result) {
+			delete this.collection[id];
+			return result;
+		}
+		return null;
 	}
-	update(objectId: string, object: import("/Users/jchiang/Documents/CodeLearning/projects-other/inputApp/src/interfaces/IModuleRenderer").IModuleRenderer): import("/Users/jchiang/Documents/CodeLearning/projects-other/inputApp/src/interfaces/IModuleRenderer").IModuleRenderer | null {
-		throw new Error("Method not implemented.");
+	update(id: string, object: IModuleRenderer): IModuleRenderer | null {
+		const result = this.collection[id];
+		if (result) {
+			this.collection[id] = object;
+			return result;
+		}
+		return null;
 	}
 }
