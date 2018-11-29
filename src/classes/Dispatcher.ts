@@ -5,24 +5,28 @@ import { IModuleStore } from "../interfaces/IModuleStore";
 import { renderModuleAction } from "../helpers/ActionBuilders";
 import { IPlayerStore } from "../interfaces/IPlayerStore";
 import { ITextStore } from '../interfaces/ITextStore';
-import { IPlayer } from "../interfaces/IPlayer";
 import Module from '../classes/Module';
 import { IRendererStore } from "../interfaces/IRendererStore";
-import { IStore } from "../interfaces/IStore";
+import { IDelegatorStore } from "../interfaces/IDelegatorStore";
+import { IParserStore } from "../interfaces/IParserStore";
 
 export default class Dispatcher implements IDispatcher {
 	public view: IView;
+	public delegatorStore: IDelegatorStore;
 	public moduleStore: IModuleStore;
 	public playerStore: IPlayerStore;
 	public rendererStore: IRendererStore;
 	public textStore: ITextStore;
+	public parserStore: IParserStore;
 	public preProcessing: Array<{ fn: Function; next: boolean }>;
 	public postProcessing: Array<{ fn: Function; next: boolean }>;
 	public otherProcessing: { [key: string]: Array<any> };
 	public executionTable: { [key: string]: Function };
 
-	constructor(args: { view: IView, textStore: ITextStore, moduleStore: IModuleStore, rendererStore: IRendererStore, playerStore: IPlayerStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
+	constructor(args: { view: IView, parserStore: IParserStore, delegatorStore: IDelegatorStore, textStore: ITextStore, moduleStore: IModuleStore, rendererStore: IRendererStore, playerStore: IPlayerStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
 		this.view = args.view;
+		this.delegatorStore = args.delegatorStore;
+		this.parserStore = args.parserStore;
 		this.moduleStore = args.moduleStore;
 		this.playerStore = args.playerStore;
 		this.rendererStore = args.rendererStore;

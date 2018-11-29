@@ -4,13 +4,17 @@ import { IPlayerStore } from './IPlayerStore';
 import { IModuleStore } from './IModuleStore';
 import { IRendererStore } from './IRendererStore';
 import { ITextStore } from './ITextStore';
+import { IDelegatorStore } from './IDelegatorStore';
+import { IParserStore } from './IParserStore';
 
 export interface IDispatcher {
 	view: IView;
 	playerStore: IPlayerStore;
 	moduleStore: IModuleStore;
 	textStore: ITextStore;
+	delegatorStore: IDelegatorStore;
 	rendererStore: IRendererStore;
+	parserStore: IParserStore;
 	process(action: IAction): void;
 	execute(action: IAction): void;
 	// getPlayer(playerId: string): IPlayer | null;
