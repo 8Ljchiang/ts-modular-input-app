@@ -11,11 +11,11 @@ const DEFAULT_CELL_WIDTH = 9;
 
 export const t3RenderTable: IRenderTable = {
     [STATUS_DEFAULT]: function(args: IRenderArgs): string {
-        const { welcome } = args.module.moduleData.messages;
+        const { welcome } = args.moduleText;
         return welcome;
     },
     [STATUS_NEW]: function(args: IRenderArgs): string {
-        const { welcome } = args.module.moduleData.messages;
+        const { welcome } = args.moduleText;
         return welcome;
     },
     [STATUS_START]: function(args: IRenderArgs): string {
@@ -24,13 +24,13 @@ export const t3RenderTable: IRenderTable = {
         const player = args.playerStore.get(playerId);
         const playerName = player ? player.name : 'Unknown';
         const boardString = renderBoard(board, board.getData());
-        const { started } = args.module.moduleData.messages;
+        const { started } = args.moduleText;
         return args.module.name + "\n\n" + boardString + "\n" + started.replace(new RegExp('{{PLAYER_NAME}}', 'g'), playerName);
     },
     [STATUS_END]: function(args: IRenderArgs): string {
         const { board } = args.module.moduleData;
         const boardString = renderBoard(board, board.getData());
-        const { end } = args.module.moduleData.messages;
+        const { end } = args.moduleText;
         return args.module.name + "\n\n" + boardString + "\n" + end;
     },
     [STATUS_WINNER]: function(args: IRenderArgs): string {
@@ -39,7 +39,7 @@ export const t3RenderTable: IRenderTable = {
         const currentPlayer = args.playerStore.get(playerId);
         const playerName = currentPlayer ? currentPlayer.name : "Unknown";
         const playerMark = currentPlayer ? currentPlayer.mark : "Unknown";
-        const { winner, end } = args.module.moduleData.messages;
+        const { winner, end } = args.moduleText;
         
         const winningPattern = findPattern(board.getMarkPositions(playerMark), t3WinPatterns3) || [];
         const highlightColor = colors.yellow;
@@ -50,7 +50,7 @@ export const t3RenderTable: IRenderTable = {
     [STATUS_DRAW]: function(args: IRenderArgs): string {
         const { board } = args.module.moduleData;
         const boardString = renderBoard(board, board.getData());
-        const { draw, end } = args.module.moduleData.messages;
+        const { draw, end } = args.moduleText;
         return args.module.name + "\n\n" + boardString + "\n" + draw + "\n" + end;
     }
 }

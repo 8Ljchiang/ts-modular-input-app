@@ -26,6 +26,7 @@ import { IPlayerStore } from './interfaces/IPlayerStore';
 import { IParserStore } from './interfaces/IParserStore';
 import { STATUS_NEW } from './lib/constants';
 import RendererStore from './classes/RendererStore';
+import TextStore from './classes/TextStore';
 // import { IMove } from './interfaces/IMove';
 
 const parserStore = new ParserStore({ parserCollection: {} });
@@ -45,6 +46,9 @@ const moduleRenderer = new ModuleRenderer(moduleRendererArgs);
 const rendererStore = new RendererStore({});
 rendererStore.add(moduleRenderer);
 
+const textStore = new TextStore({});
+textStore.add(t3Messages);
+
 const t3ModuleArgs = {
     id: "m-t3",
     name: "Tic Tac Toe",
@@ -55,7 +59,7 @@ const t3ModuleArgs = {
         players: [P1_id, P2_id],
         board: new Board({ height: 3, width: 3, moves: [] }),
         activePlayerIndex: 0,
-        messages: t3Messages
+        messages: "t-t3-module-1"
     },
 }
 
@@ -77,6 +81,7 @@ const dispatcherArgs = {
     view, 
     playerStore,
     moduleStore, 
+    textStore,
     executionTable,
     rendererStore,
     pre: [], 

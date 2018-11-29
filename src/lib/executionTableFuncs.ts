@@ -88,14 +88,16 @@ export function RENDER_MODULE_FN(action: IAction, dispatcher: IDispatcher): void
 	const module = action.refData.module;
 	
 	if (module) {
-		const args = {
-            module,
-			view: dispatcher.view,
-			playerStore: dispatcher.playerStore
-		}
-		
+		const moduleText = dispatcher.textStore.get(module.moduleData.messages) || {};
 		const moduleRenderer = dispatcher.rendererStore.get(module.moduleRenderer);
+		
 		if (moduleRenderer) {
+			const args = {
+				module,
+				view: dispatcher.view,
+				playerStore: dispatcher.playerStore,
+				moduleText
+			}
 			moduleRenderer.render(args);
 		}
 	}

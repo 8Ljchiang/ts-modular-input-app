@@ -4,25 +4,29 @@ import { IAction } from "../interfaces/IAction";
 import { IModuleStore } from "../interfaces/IModuleStore";
 import { renderModuleAction } from "../helpers/ActionBuilders";
 import { IPlayerStore } from "../interfaces/IPlayerStore";
+import { ITextStore } from '../interfaces/ITextStore';
 import { IPlayer } from "../interfaces/IPlayer";
 import Module from '../classes/Module';
 import { IRendererStore } from "../interfaces/IRendererStore";
+import { IStore } from "../interfaces/IStore";
 
 export default class Dispatcher implements IDispatcher {
 	public view: IView;
 	public moduleStore: IModuleStore;
 	public playerStore: IPlayerStore;
 	public rendererStore: IRendererStore;
+	public textStore: ITextStore;
 	public preProcessing: Array<{ fn: Function; next: boolean }>;
 	public postProcessing: Array<{ fn: Function; next: boolean }>;
 	public otherProcessing: { [key: string]: Array<any> };
 	public executionTable: { [key: string]: Function };
 
-	constructor(args: { view: IView, moduleStore: IModuleStore, rendererStore: IRendererStore, playerStore: IPlayerStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
+	constructor(args: { view: IView, textStore: ITextStore, moduleStore: IModuleStore, rendererStore: IRendererStore, playerStore: IPlayerStore, executionTable: any, pre: any, post: any, otherProcessing: any }) {
 		this.view = args.view;
 		this.moduleStore = args.moduleStore;
 		this.playerStore = args.playerStore;
 		this.rendererStore = args.rendererStore;
+		this.textStore = args.textStore
 		this.preProcessing = args.pre;
 		this.postProcessing = args.post;
 		this.executionTable = args.executionTable;

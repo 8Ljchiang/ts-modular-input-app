@@ -3,11 +3,13 @@ import { IView } from './IView';
 import { IPlayerStore } from './IPlayerStore';
 import { IModuleStore } from './IModuleStore';
 import { IRendererStore } from './IRendererStore';
+import { ITextStore } from './ITextStore';
 
 export interface IDispatcher {
 	view: IView;
 	playerStore: IPlayerStore;
 	moduleStore: IModuleStore;
+	textStore: ITextStore;
 	rendererStore: IRendererStore;
 	process(action: IAction): void;
 	execute(action: IAction): void;

@@ -20,4 +20,5 @@ export interface IRenderArgs {
 	module: IModule;
 	view: IView;
 	playerStore: IPlayerStore;
+	moduleText: { [key: string]: string };
 }
