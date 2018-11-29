@@ -57,11 +57,12 @@ const t3ModuleArgs = {
     status: STATUS_NEW,
     moduleRenderer: "mr-1",
     parserDelegator: "del-t3-1",
+    moduleText: "t-t3-module-1",
     moduleData: {
         players: [P1_id, P2_id],
         board: new Board({ height: 3, width: 3, moves: [] }),
         activePlayerIndex: 0,
-        messages: "t-t3-module-1"
+        // messages: "t-t3-module-1"
     },
 }
 

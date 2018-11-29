@@ -88,7 +88,8 @@ export function RENDER_MODULE_FN(action: IAction, dispatcher: IDispatcher): void
 	const module = action.refData.module;
 	
 	if (module) {
-		const moduleText = dispatcher.textStore.get(module.moduleData.messages) || {};
+		const textId = module.moduleText;
+		const moduleText = dispatcher.textStore.get(textId) || {};
 		const moduleRenderer = dispatcher.rendererStore.get(module.moduleRenderer);
 
 		if (moduleRenderer) {
@@ -107,7 +108,7 @@ export function HANDLE_INPUT_FN(action: IAction, dispatcher: IDispatcher): void 
 	const { module, moduleId } = action.refData;
 	const delegatorId: string = module.parserDelegator;
 	const delegator = dispatcher.delegatorStore.get(delegatorId);
-	
+
 	if (module && delegator) {
 		const trimmedInput = action.payload.input.trim();
 		const key: string = module.status;
