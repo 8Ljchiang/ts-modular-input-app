@@ -9,7 +9,8 @@ export default class ParserStore implements IParserStore{
     }
 
     getParser(parserId: string): IParser {
-        return this.parserCollection[parserId];
+        const result = this.parserCollection[parserId];
+        return Object.assign({}, result);    
     }
 
     addParser(parser: IParser): void {

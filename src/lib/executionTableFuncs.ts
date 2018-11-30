@@ -24,7 +24,9 @@ export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
                 mark: currentPlayerMark
 			}
 			
+			// This is where to handle different numbers of players.
 			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+			// Execute AI MOVE, 1 or 2.
 		
 			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
 			gameCheckAction.refData.moveSuccess = true;

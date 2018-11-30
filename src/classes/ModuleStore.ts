@@ -10,6 +10,8 @@ export default class ModuleStore implements IModuleStore {
     }
     
     getModule(id: string): IModule {
+        const result = this.moduleCollection[id];
+        
         return this.moduleCollection[id];
     }
     addModule(module: IModule): void {

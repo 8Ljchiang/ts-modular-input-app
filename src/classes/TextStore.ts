@@ -12,7 +12,7 @@ export default class TextStore implements ITextStore {
 	get(id: string): IModuleText | null {
 		const result = this.collection[id]
 		if (result) {
-			return result;
+			return Object.assign({}, result);
 		}
 		return null;
 	}

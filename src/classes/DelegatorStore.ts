@@ -10,7 +10,7 @@ export default class DelegatorStore implements IDelegatorStore {
 	get(id: string): IDelegator | null {
 		const result = this.collection[id]
 		if (result) {
-			return result;
+			return Object.assign({}, result);
 		}
 		return null;
 	}

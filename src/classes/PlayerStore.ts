@@ -11,7 +11,7 @@ export default class PlayerStore implements IPlayerStore {
 	get(id: string): IPlayer | null {
 		const result = this.collection[id]
 		if (result) {
-			return result;
+			return Object.assign({}, result);
 		}
 		return null;
 	}
