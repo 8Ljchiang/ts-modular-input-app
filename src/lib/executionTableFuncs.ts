@@ -5,6 +5,7 @@ import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW } from './constant
 import { t3GameCheckAction, showT3OpenMovesAction } from '../helpers/actionBuilders';
 import { T3PatternChecker } from '../classes/T3PatternChecker';
 import { t3WinPatterns3 } from './t3Patterns';
+import { getMove } from '../helpers/t3MoveGeneratorHelpers';
 
 export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 	// module copy is added to action refData via dispatcher _preExecution middleware.
@@ -170,6 +171,36 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 			}
 		}
 	}
+}
+
+export function T3_AUTO_MOVE_FN(action: IAction, dispatcher: IDispatcher) {
+	const { module } = action.refData;
+	if (module) {
+		const { mark, skill } = action.payload;
+		const { board } = action.refData.module.moduleData;
+		const { moduleStore } = dispatcher;
+		const boardMoves = board.getData();
+		const boardSize = board.height * board.width;
+
+		const getMoveArgs = {
+			boardSize,
+			boardMoves, 
+			skill
+		}
+
+		const position = getMove(getMoveArgs);
+
+		const addMoveArgs = {
+			playerId: "auto-gen",
+			position,
+			mark
+		}
+
+		moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+	}
+
+
+
 }
 
 function cycleActivePlayer(module: IModule): void {

@@ -6,7 +6,8 @@ export function getMove(args: { boardSize: number, boardMoves: any[], skill: num
 	const { skill } = args;
 	const randomChance = Math.random();
 	if (skill > 0 && skill < 1 && randomChance < skill) {
-		return getSkilledMove(args);
+		// return getSkilledMove(args);
+		return getRandomMove(args);
 	}
 	return getRandomMove(args);
 }
