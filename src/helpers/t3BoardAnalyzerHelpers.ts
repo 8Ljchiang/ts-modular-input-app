@@ -1,3 +1,5 @@
+import { IMove } from "../interfaces/IMove";
+
 export function isValidPosition(boardSize: number, position: number): boolean {
 	return position > 0 && position <= boardSize;
 }
@@ -11,13 +13,13 @@ export function getValidPositions(boardSize: number): number[] {
 	return validPositions;
 }
 
-export function getTakenPositions(boardMoves: any[]): number[] {
-	return boardMoves.map((move: any) => {
+export function getTakenPositions(boardMoves: IMove[]): number[] {
+	return boardMoves.map((move: IMove) => {
 		return parseInt(move.position);
 	});
 }
 
-export function isPositionEmpty(boardMoves: any[], position: number): boolean {
+export function isPositionEmpty(boardMoves: IMove[], position: number): boolean {
 	for (let move of boardMoves) {
 		if (parseInt(move.position) === position) {
 			return false;
@@ -26,11 +28,11 @@ export function isPositionEmpty(boardMoves: any[], position: number): boolean {
 	return true;
 }
 
-export function getEmptyPositions(args: { boardSize: number, boardMoves: any[] }): number[] {
+export function getEmptyPositions(args: { boardSize: number, boardMoves: IMove[] }): number[] {
 	const { boardSize, boardMoves } = args;
 	const emptyPositions: Array<number> = [];
 	const takenPositions = getTakenPositions(boardMoves);
-	for (let i = 0; i <= boardSize; i++) {
+	for (let i = 1; i <= boardSize; i++) {
 		if (!takenPositions.includes(i)) {
 			emptyPositions.push(i)
 		}
@@ -38,7 +40,7 @@ export function getEmptyPositions(args: { boardSize: number, boardMoves: any[] }
 	return emptyPositions;
 }
 
-export function getMarkPositions(boardMoves: any[], mark: string): number[] {
+export function getMarkPositions(boardMoves: IMove[], mark: string): number[] {
 	const markPositions = [];
 	for (let move of boardMoves) {
 		if (move.mark === mark) {

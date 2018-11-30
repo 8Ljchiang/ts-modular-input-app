@@ -1,11 +1,12 @@
 import { IAction } from '../interfaces/IAction';
 import { IDispatcher } from '../interfaces/IDispatcher';
 import { IModule } from '../interfaces/IModule';
-import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW } from './constants';
+import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW, MARK_1, MARK_2 } from './constants';
 import { t3GameCheckAction, showT3OpenMovesAction } from '../helpers/actionBuilders';
 import { T3PatternChecker } from '../classes/T3PatternChecker';
 import { t3WinPatterns3 } from './t3Patterns';
 import { getMove } from '../helpers/t3MoveGeneratorHelpers';
+import { isPositionEmpty } from '../helpers/T3BoardAnalyzerHelpers';
 
 export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 	// module copy is added to action refData via dispatcher _preExecution middleware.
@@ -176,11 +177,13 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 export function T3_AUTO_MOVE_FN(action: IAction, dispatcher: IDispatcher) {
 	const { module } = action.refData;
 	if (module) {
-		const { mark, skill } = action.payload;
+		const { skill } = action.payload;
 		const { board } = action.refData.module.moduleData;
 		const { moduleStore } = dispatcher;
-		const boardMoves = board.getData();
+		const boardMoves = board.moves;		
 		const boardSize = board.height * board.width;
+		const lastMoveMark = boardMoves[boardMoves.length-1].mark
+		const oppositeMark = (lastMoveMark === MARK_1) ? MARK_2 : MARK_1;
 
 		const getMoveArgs = {
 			boardSize,
@@ -190,17 +193,20 @@ export function T3_AUTO_MOVE_FN(action: IAction, dispatcher: IDispatcher) {
 
 		const position = getMove(getMoveArgs);
 
-		const addMoveArgs = {
-			playerId: "auto-gen",
-			position,
-			mark
+		if (isPositionEmpty(boardMoves, position)) {
+			const addMoveArgs = {
+				playerId: "auto-gen",
+				position,
+				mark: oppositeMark
+			}
+	
+			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+	
+			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+			gameCheckAction.refData.moveSuccess = true;
+			dispatcher.execute(gameCheckAction);
 		}
-
-		moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
 	}
-
-
-
 }
 
 function cycleActivePlayer(module: IModule): void {

@@ -28,7 +28,7 @@ import ParserStore from './classes/ParserStore';
 import { IParserStore } from './interfaces/IParserStore';
 // import { IMove } from './interfaces/IMove';
 
-import { STATUS_NEW } from './lib/constants';
+import { STATUS_NEW, OPEN_SPACE } from './lib/constants';
 
 const parserStore = new ParserStore({ parserCollection: {} });
 populateParserStore(parserStore);
@@ -112,8 +112,10 @@ function populatePlayerStore(playerStore: IPlayerStore): void {
     const MARK_2 = 'O';
     const player1 = new Player({ id: P1_id, name: DEFAULT_P1, mark: MARK_1 });
     const player2 = new Player({ id: P2_id, name: DEFAULT_P2, mark: MARK_2 });
+    const bot = new Player({ id: "auto-gen", name: "BOT", mark: OPEN_SPACE });
     playerStore.add(player1);
     playerStore.add(player2);
+    playerStore.add(bot);
 }
 
 function populateParserStore(parserStore: IParserStore): void {

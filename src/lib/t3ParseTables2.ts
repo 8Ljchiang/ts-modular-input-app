@@ -1,6 +1,6 @@
 import { STATUS_START } from "./constants";
 import { IParseArgs } from '../interfaces/Args';
-import { addMoveAction, setStatusAction, showOptionsAction, showT3OpenMovesAction, t3NewGameAction } from '../helpers/actionBuilders';
+import { addMoveAction, setStatusAction, showOptionsAction, showT3OpenMovesAction, t3NewGameAction, autoMoveAction } from '../helpers/actionBuilders';
 
 export const newGameHandlers = {
     ready: function(args: IParseArgs) {
@@ -16,21 +16,44 @@ export const newGameHandlers = {
 		args.dispatcher.process(action);
     },
     options: function(args: any) { 
-        return ["ready"]
+        const validOptions = Object.keys(this).filter((key) => {
+            const naHandlers = ['default', 'error', 'options'];
+            if (naHandlers.includes(key)) {
+                return false;
+            }
+            return true;
+        });
+        return validOptions;
     }
 }
 
 export const startedGameHandlers = {
+    auto: function(args: IParseArgs) {
+        const { dispatcher, moduleId } = args;
+        const action = autoMoveAction(0.5, moduleId);
+        dispatcher.process(action);
+    },
     default: function(args: IParseArgs) {
 		const action = addMoveAction(args.input, args.moduleId);
 		args.dispatcher.process(action);
     },
     error: function(args: IParseArgs) {
-		const action = showT3OpenMovesAction(args.moduleId);
+        const options = this.options(args);
+		const action = showOptionsAction(options, args.moduleId);
 		args.dispatcher.process(action);
+		// const action = showT3OpenMovesAction(args.moduleId);
+		// args.dispatcher.process(action);
     },
     options: function(args: any) { 
-        return args.dispatcher.moduleStore.getModule(args.moduleId).moduleData.board.getEmptyPositions().map((p: any) => p.toString());
+        const moveOptions = args.dispatcher.moduleStore.getModule(args.moduleId).moduleData.board.getEmptyPositions().map((p: any) => p.toString());
+        const validOptions = Object.keys(this).filter((key) => {
+            const naHandlers = ['default', 'error', 'options'];
+            if (naHandlers.includes(key)) {
+                return false;
+            }
+            return true;
+        });
+        return [ ...validOptions, ...moveOptions ];
     }
 }
 
