@@ -22,3 +22,14 @@ export interface IRenderArgs {
 	playerStore: IPlayerStore;
 	moduleText: { [key: string]: string };
 }
+
+export interface IModuleArgs {
+	id: string;
+    name: string;
+    status: string;
+    moduleRenderer: string;
+    parserDelegator: string;
+    moduleText: string;
+    moduleData: { [key: string]: any };
+}
+

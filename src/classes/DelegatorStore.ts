@@ -1,26 +1,25 @@
+import { IDelegator, IDelegatorStore } from '../interfaces/IDelegatorStore';
 import { ICollection } from '../interfaces/ICollection';
-import { IPlayer } from '../interfaces/IPlayer';
-import { IPlayerStore } from '../interfaces/IPlayerStore';
 
-export default class PlayerStore implements IPlayerStore {
-	public collection: ICollection<IPlayer>
-	
-	constructor(args: { collection?: ICollection<IPlayer> }) {
-		this.collection = args.collection || {};
+export default class DelegatorStore implements IDelegatorStore {
+	public collection: ICollection<IDelegator>;
+
+	constructor(collection: ICollection<IDelegator>) {
+		this.collection = collection;
 	}
-	get(id: string): IPlayer | null {
+	get(id: string): IDelegator | null {
 		const result = this.collection[id]
 		if (result) {
 			return Object.assign({}, result);
 		}
 		return null;
 	}
-	add(object: IPlayer): IPlayer  | null {
+	add(object: IDelegator): IDelegator | null {
 		const id = object.id;
 		this.collection[id] = object;
 		return this.collection[id];
 	}
-	remove(id: string): IPlayer | null {
+	remove(id: string): IDelegator | null {
 		const result = this.collection[id]
 		if (result) {
 			delete this.collection[id];
@@ -28,7 +27,7 @@ export default class PlayerStore implements IPlayerStore {
 		}
 		return null;
 	}
-	update(id: string, object: IPlayer): IPlayer | null {
+	update(id: string, object: IDelegator): IDelegator | null {
 		const result = this.collection[id];
 		if (result) {
 			this.collection[id] = object;

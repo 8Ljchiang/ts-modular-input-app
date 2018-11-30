@@ -7,9 +7,6 @@ import View from "./classes/View";
 import Dispatcher from './classes/Dispatcher';
 import { executionTable } from './lib/executionTable';
 
-import ParserStore from './classes/ParserStore';
-import ParserDelegator from './classes/ParserDelegator';
-
 import Module from './classes/Module';
 import ModuleStore from './classes/ModuleStore';
 import ModuleRenderer from './classes/ModuleRenderer';
@@ -18,16 +15,20 @@ import { t3ParserDictionary } from './lib/t3ParserDictionary'
 import { t3NewParser, t3EndParser, t3StartParser } from './lib/t3Parsers';
 import { t3RenderTable } from './lib/t3RenderTable';
 import { t3Messages } from './lib/t3Messages';
-
-import ContextStore from './classes/ContextStore';
 import { t3ContextCollection } from './lib/t3ContextCollection';
+
+// import ParserDelegator from './classes/ParserDelegator';
+import TextStore from './classes/TextStore';
+import DelegatorStore from './classes/DelegatorStore';
+import ContextStore from './classes/ContextStore';
+import RendererStore from './classes/RendererStore';
 import PlayerStore from './classes/PlayerStore';
 import { IPlayerStore } from './interfaces/IPlayerStore';
+import ParserStore from './classes/ParserStore';
 import { IParserStore } from './interfaces/IParserStore';
-import { STATUS_NEW } from './lib/constants';
-import RendererStore from './classes/RendererStore';
-import TextStore from './classes/TextStore';
 // import { IMove } from './interfaces/IMove';
+
+import { STATUS_NEW } from './lib/constants';
 
 const parserStore = new ParserStore({ parserCollection: {} });
 populateParserStore(parserStore);
@@ -37,8 +38,9 @@ const P2_id = 'p2';
 const playerStore = new PlayerStore({});
 populatePlayerStore(playerStore);
 
-const delegatorArgs = { parserDictionary: t3ParserDictionary, parserStore }
-const parserDelegator = new ParserDelegator(delegatorArgs);
+const t3Delegator = { id: "del-t3-1", ...t3ParserDictionary };
+const delegatorStore = new DelegatorStore({});
+delegatorStore.add(t3Delegator);
 
 const moduleRendererArgs = { id: "mr-1", renderTable: t3RenderTable }
 const moduleRenderer = new ModuleRenderer(moduleRendererArgs);
@@ -54,12 +56,13 @@ const t3ModuleArgs = {
     name: "Tic Tac Toe",
     status: STATUS_NEW,
     moduleRenderer: "mr-1",
-    parserDelegator,
+    parserDelegator: "del-t3-1",
+    moduleText: "t-t3-module-1",
     moduleData: {
         players: [P1_id, P2_id],
         board: new Board({ height: 3, width: 3, moves: [] }),
         activePlayerIndex: 0,
-        messages: "t-t3-module-1"
+        // messages: "t-t3-module-1"
     },
 }
 
@@ -79,6 +82,8 @@ const view = new View(viewArgs);
 
 const dispatcherArgs = { 
     view, 
+    delegatorStore,
+    parserStore,
     playerStore,
     moduleStore, 
     textStore,
@@ -118,3 +123,5 @@ function populateParserStore(parserStore: IParserStore): void {
 }
 
 // TODO: Create containers.
+// const delegatorArgs = { parserDictionary: t3ParserDictionary, parserStore }
+// const parserDelegator = new ParserDelegator(delegatorArgs);

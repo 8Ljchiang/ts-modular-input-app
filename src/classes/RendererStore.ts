@@ -11,7 +11,7 @@ export default class RendererStore implements IRendererStore {
 	get(id: string): IModuleRenderer | null {
 		const result = this.collection[id]
 		if (result) {
-			return result;
+			return Object.assign( Object.create( Object.getPrototypeOf(result)), result)
 		}
 		return null;
 	}

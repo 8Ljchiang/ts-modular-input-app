@@ -24,7 +24,9 @@ export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
                 mark: currentPlayerMark
 			}
 			
+			// This is where to handle different numbers of players.
 			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+			// Execute AI MOVE, 1 or 2.
 		
 			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
 			gameCheckAction.refData.moveSuccess = true;
@@ -88,9 +90,10 @@ export function RENDER_MODULE_FN(action: IAction, dispatcher: IDispatcher): void
 	const module = action.refData.module;
 	
 	if (module) {
-		const moduleText = dispatcher.textStore.get(module.moduleData.messages) || {};
+		const textId = module.moduleText;
+		const moduleText = dispatcher.textStore.get(textId) || {};
 		const moduleRenderer = dispatcher.rendererStore.get(module.moduleRenderer);
-		
+
 		if (moduleRenderer) {
 			const args = {
 				module,
@@ -104,10 +107,27 @@ export function RENDER_MODULE_FN(action: IAction, dispatcher: IDispatcher): void
 }
 
 export function HANDLE_INPUT_FN(action: IAction, dispatcher: IDispatcher): void {
-	const module = action.refData.module;
-	const trimmedInput = action.payload.input.trim();
-	if (module) {
-		module.handleInput({ input: trimmedInput, dispatcher, moduleId: action.refData.moduleId });
+	const { module, moduleId } = action.refData;
+	const delegatorId: string = module.parserDelegator;
+	const delegator = dispatcher.delegatorStore.get(delegatorId);
+
+	if (module && delegator) {
+		const trimmedInput = action.payload.input.trim();
+		const key: string = module.status;
+        const parserId: string = delegator[key];
+		const parser = dispatcher.parserStore.getParser(parserId);
+		
+		if (parser) {
+			const args = {
+				dispatcher,
+				moduleId,
+				module,
+				input: trimmedInput
+			}
+			parser.parseTable.handle(args);
+		}
+
+		// module.handleInput({ input: trimmedInput, dispatcher, moduleId: action.refData.moduleId });
 	}
 }
 
