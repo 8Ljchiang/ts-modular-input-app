@@ -1,14 +1,13 @@
-import { IDispatcher } from "../interfaces/IDispatcher";
-import { IView } from "../interfaces/IView";
-import { IAction } from "../interfaces/IAction";
-import { IModuleStore } from "../interfaces/IModuleStore";
 import { renderModuleAction } from "../helpers/ActionBuilders";
+import { IAction } from "../interfaces/IAction";
+import { IDelegatorStore } from "../interfaces/IDelegatorStore";
+import { IDispatcher } from "../interfaces/IDispatcher";
+import { IModuleStore } from "../interfaces/IModuleStore";
+import { IParserStore } from "../interfaces/IParserStore";
 import { IPlayerStore } from "../interfaces/IPlayerStore";
 import { ITextStore } from '../interfaces/ITextStore';
-import Module from '../classes/Module';
 import { IRendererStore } from "../interfaces/IRendererStore";
-import { IDelegatorStore } from "../interfaces/IDelegatorStore";
-import { IParserStore } from "../interfaces/IParserStore";
+import { IView } from "../interfaces/IView";
 
 export default class Dispatcher implements IDispatcher {
 	public view: IView;

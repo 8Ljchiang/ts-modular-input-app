@@ -59,7 +59,7 @@ const t3ModuleArgs = {
     parserDelegator: "del-t3-1",
     moduleText: "t-t3-module-1",
     moduleData: {
-        players: [P1_id, P2_id],
+        players: [P1_id],
         board: new Board({ height: 3, width: 3, moves: [] }),
         activePlayerIndex: 0,
         // messages: "t-t3-module-1"

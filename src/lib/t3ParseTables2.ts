@@ -63,7 +63,8 @@ export const endGameHandlers = {
         args.dispatcher.process(action);
     },
     quit: function(args: any) {
-		args.dispatcher.process({});
+        // args.dispatcher.process({});
+        process.exit(0);
     },
     default: function(args: any) {
 		args.dispatcher.process({});

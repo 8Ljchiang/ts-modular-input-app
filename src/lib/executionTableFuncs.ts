@@ -2,7 +2,7 @@ import { IAction } from '../interfaces/IAction';
 import { IDispatcher } from '../interfaces/IDispatcher';
 import { IModule } from '../interfaces/IModule';
 import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW, MARK_1, MARK_2 } from './constants';
-import { t3GameCheckAction, showT3OpenMovesAction } from '../helpers/actionBuilders';
+import { t3GameCheckAction, showT3OpenMovesAction, autoMoveAction } from '../helpers/actionBuilders';
 import { T3PatternChecker } from '../classes/T3PatternChecker';
 import { t3WinPatterns3 } from './t3Patterns';
 import { getMove } from '../helpers/t3MoveGeneratorHelpers';
@@ -17,29 +17,59 @@ export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 		const currentPlayerId = players[activePlayerIndex];
 		const player = playerStore.get(currentPlayerId);
 		const currentPlayerMark = player ? player.mark : ' ';
-      
-        const position = parseInt(action.payload.move);
-        if (board.isPositionEmpty(position)) {
-            const addMoveArgs = {
-                playerId: currentPlayerId,
-                position: position.toString(),
-                mark: currentPlayerMark
-			}
+	  
+		if (players.length === 2) {
+			const position = parseInt(action.payload.move);
+			if (board.isPositionEmpty(position)) {
+				const addMoveArgs = {
+					playerId: currentPlayerId,
+					position: position.toString(),
+					mark: currentPlayerMark
+				}
+				
+				// This is where to handle different numbers of players.
+				moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+				// Execute AI MOVE, 1 or 2.
 			
-			// This is where to handle different numbers of players.
-			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
-			// Execute AI MOVE, 1 or 2.
-		
-			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
-			gameCheckAction.refData.moveSuccess = true;
-			dispatcher.execute(gameCheckAction);
-		} else {
-			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
-			gameCheckAction.refData.moveSuccess = false;
-			dispatcher.execute(gameCheckAction);
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = true;
+				dispatcher.execute(gameCheckAction);
+			} else {
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = false;
+				dispatcher.execute(gameCheckAction);
+	
+				const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
+				dispatcher.execute(openMovesAction);
+			}
+		} else if (players.length === 1) {
+			const position = parseInt(action.payload.move);
+			if (board.isPositionEmpty(position)) {
+				const addMoveArgs = {
+					playerId: currentPlayerId,
+					position: position.toString(),
+					mark: currentPlayerMark
+				}
+				
+				// This is where to handle different numbers of players.
+				moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+				// Execute AI MOVE, 1 or 2.
+			
+				const { moduleId } = action.refData;
+				const aMoveAction = autoMoveAction(0.5, moduleId);
+				dispatcher.execute(aMoveAction);
 
-			const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
-			dispatcher.execute(openMovesAction);
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = true;
+				dispatcher.execute(gameCheckAction);
+			} else {
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = false;
+				dispatcher.execute(gameCheckAction);
+	
+				const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
+				dispatcher.execute(openMovesAction);
+			}
 		}
 	}
 }
