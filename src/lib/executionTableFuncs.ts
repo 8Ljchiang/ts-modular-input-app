@@ -1,10 +1,12 @@
 import { IAction } from '../interfaces/IAction';
 import { IDispatcher } from '../interfaces/IDispatcher';
 import { IModule } from '../interfaces/IModule';
-import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW } from './constants';
-import { t3GameCheckAction, showT3OpenMovesAction } from '../helpers/actionBuilders';
+import { STATUS_NEW, STATUS_START, STATUS_WINNER, STATUS_DRAW, MARK_1, MARK_2 } from './constants';
+import { t3GameCheckAction, showT3OpenMovesAction, autoMoveAction } from '../helpers/actionBuilders';
 import { T3PatternChecker } from '../classes/T3PatternChecker';
 import { t3WinPatterns3 } from './t3Patterns';
+import { getMove } from '../helpers/t3MoveGeneratorHelpers';
+import { isPositionEmpty } from '../helpers/T3BoardAnalyzerHelpers';
 
 export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 	// module copy is added to action refData via dispatcher _preExecution middleware.
@@ -15,29 +17,59 @@ export function T3_MOVE_FN(action: IAction, dispatcher: IDispatcher): void {
 		const currentPlayerId = players[activePlayerIndex];
 		const player = playerStore.get(currentPlayerId);
 		const currentPlayerMark = player ? player.mark : ' ';
-      
-        const position = parseInt(action.payload.move);
-        if (board.isPositionEmpty(position)) {
-            const addMoveArgs = {
-                playerId: currentPlayerId,
-                position: position.toString(),
-                mark: currentPlayerMark
-			}
+	  
+		if (players.length === 2) {
+			const position = parseInt(action.payload.move);
+			if (board.isPositionEmpty(position)) {
+				const addMoveArgs = {
+					playerId: currentPlayerId,
+					position: position.toString(),
+					mark: currentPlayerMark
+				}
+				
+				// This is where to handle different numbers of players.
+				moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+				// Execute AI MOVE, 1 or 2.
 			
-			// This is where to handle different numbers of players.
-			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
-			// Execute AI MOVE, 1 or 2.
-		
-			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
-			gameCheckAction.refData.moveSuccess = true;
-			dispatcher.execute(gameCheckAction);
-		} else {
-			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
-			gameCheckAction.refData.moveSuccess = false;
-			dispatcher.execute(gameCheckAction);
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = true;
+				dispatcher.execute(gameCheckAction);
+			} else {
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = false;
+				dispatcher.execute(gameCheckAction);
+	
+				const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
+				dispatcher.execute(openMovesAction);
+			}
+		} else if (players.length === 1) {
+			const position = parseInt(action.payload.move);
+			if (board.isPositionEmpty(position)) {
+				const addMoveArgs = {
+					playerId: currentPlayerId,
+					position: position.toString(),
+					mark: currentPlayerMark
+				}
+				
+				// This is where to handle different numbers of players.
+				moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+				// Execute AI MOVE, 1 or 2.
+			
+				const { moduleId } = action.refData;
+				const aMoveAction = autoMoveAction(0.5, moduleId);
+				dispatcher.execute(aMoveAction);
 
-			const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
-			dispatcher.execute(openMovesAction);
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = true;
+				dispatcher.execute(gameCheckAction);
+			} else {
+				const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+				gameCheckAction.refData.moveSuccess = false;
+				dispatcher.execute(gameCheckAction);
+	
+				const openMovesAction = showT3OpenMovesAction(action.refData.moduleId);;
+				dispatcher.execute(openMovesAction);
+			}
 		}
 	}
 }
@@ -168,6 +200,41 @@ export function T3_GAME_CHECK_FN(action: IAction, dispatcher: IDispatcher): void
 				moduleStore.updateModuleData(moduleId, { activePlayerIndex: nextPlayerIndex });
 				// cycleActivePlayer(module);
 			}
+		}
+	}
+}
+
+export function T3_AUTO_MOVE_FN(action: IAction, dispatcher: IDispatcher) {
+	const { module } = action.refData;
+	if (module) {
+		const { skill } = action.payload;
+		const { board } = action.refData.module.moduleData;
+		const { moduleStore } = dispatcher;
+		const boardMoves = board.moves;		
+		const boardSize = board.height * board.width;
+		const lastMoveMark = boardMoves[boardMoves.length-1].mark
+		const oppositeMark = (lastMoveMark === MARK_1) ? MARK_2 : MARK_1;
+
+		const getMoveArgs = {
+			boardSize,
+			boardMoves, 
+			skill
+		}
+
+		const position = getMove(getMoveArgs);
+
+		if (isPositionEmpty(boardMoves, position)) {
+			const addMoveArgs = {
+				playerId: "auto-gen",
+				position,
+				mark: oppositeMark
+			}
+	
+			moduleStore.updateModuleDataMoves(module.id, addMoveArgs);
+	
+			const gameCheckAction = t3GameCheckAction(action.refData.moduleId);
+			gameCheckAction.refData.moveSuccess = true;
+			dispatcher.execute(gameCheckAction);
 		}
 	}
 }

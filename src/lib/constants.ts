@@ -9,3 +9,5 @@ export const DEFAULT_BOARD_HEIGHT = 3;
 export const DEFAULT_BOARD_WIDTH = 3;
 
 export const OPEN_SPACE = " ";
+export const MARK_1 = "X";
+export const MARK_2 = "O";

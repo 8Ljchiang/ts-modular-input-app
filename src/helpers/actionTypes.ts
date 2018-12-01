@@ -5,6 +5,7 @@ export const HANDLE_INPUT = 'HANDLE_INPUT';
 export const RENDER_MODULE = 'RENDER_MODULE';
 
 export const T3_MOVE = 'T3_MOVE';
+export const T3_AUTO_MOVE = 'T3_AUTO_MOVE';
 export const T3_NEW_GAME = 'T3_NEW_GAME';
 export const T3_GAME_CHECK = 'T3_GAME_CHECK';
 export const SHOW_T3_OPEN_MOVES = 'SHOW_T3_OPEN_MOVES';

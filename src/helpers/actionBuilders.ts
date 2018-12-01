@@ -1,4 +1,4 @@
-import { T3_MOVE, T3_NEW_GAME, RENDER_MODULE, SHOW_OPTIONS, SHOW_T3_OPEN_MOVES, SET_MODULE_STATUS, CYCLE_PLAYER, HANDLE_INPUT, T3_GAME_CHECK } from './actionTypes';
+import { T3_MOVE, T3_NEW_GAME, RENDER_MODULE, SHOW_OPTIONS, SHOW_T3_OPEN_MOVES, SET_MODULE_STATUS, CYCLE_PLAYER, HANDLE_INPUT, T3_GAME_CHECK, T3_AUTO_MOVE } from './actionTypes';
 import { IAction } from '../interfaces/IAction';
 
 export function addMoveAction(move: any, moduleId: string): IAction {
@@ -12,6 +12,19 @@ export function addMoveAction(move: any, moduleId: string): IAction {
 		}
 	}
 	
+	return action;
+}
+
+export function autoMoveAction(skill: number, moduleId: string): IAction {
+	const action: IAction = {
+		type: T3_AUTO_MOVE,
+		payload: {
+			skill,
+		},
+		refData: {
+			moduleId
+		}
+	}
 	return action;
 }
 
