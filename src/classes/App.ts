@@ -24,20 +24,6 @@ export default class App {
         const view = this.dispatcher.view;
         view.inputInterface.on('line', (line: any) => {
             const context: IContext = this.contextStore.getContext(this.currentContextReference);
-            // const currModule: IModule = this.moduleStore.getModule(context.moduleId);
-            // const args = {
-            //     input: line,
-            //     view: this.view,
-            //     app: this
-            // }
-
-            // const args = {
-            //     input: line,
-            //     dispatcher: this.dispatcher,
-            //     moduleId: context.moduleId
-            // }
-            // currModule.handleInput(args);
-
             const action = handleInputAction(line, context.moduleId);
             this.dispatcher.execute(action);
         });
@@ -47,16 +33,6 @@ export default class App {
         const context: IContext = this.contextStore.getContext(this.currentContextReference);
         const action = renderModuleAction(context.moduleId);
         this.dispatcher.execute(action);
-        
-        // Note:
-        // this.view.clear();
-        // const context: IContext = this.contextStore.getContext(this.currentContextReference);
-        // const mModule: IModule = this.moduleStore.getModule(context.moduleId);
-        // const args = {
-        //     module: mModule,
-        //     view: this.dispatcher.view
-        // }
-        // mModule.moduleRenderer.render(args);
     }
 
     setCurrentContextReference(contextId: string): void {
